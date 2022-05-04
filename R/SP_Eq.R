@@ -1,11 +1,11 @@
-#' Surplus production under equilibrium assumption for Schaefer and Fox
+#' @title Surplus production under equilibrium assumption for Schaefer and Fox
+#'
+#' @description This function calculate MSY and fMSY including its confident interval,
+#' as well as the r squared and adj R squared, under equilibrium assumption using Schaefer and Fox models
 #'
 #' @param df dataframe containing three columns; year, catch and effort
 #'
 #' @return
-#' This function calculate MSY and fMSY including its confident interval,
-#' as well as the r squared and adj R squared, under equilibrium assumption using Schaefer and Fox models
-#'
 #' @export
 #'
 #'
