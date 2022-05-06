@@ -14,19 +14,31 @@
 #' https://www.fishbase.in/manual/key%20facts.htm
 #'
 #' @examples
-#' rgenerator("Sardinella lemuru")
-#' rgenerator("Hoplostethus atlanticus")
-#' rgenerator("Plectropomus areolatus")
-#' rgenerator("Anabas testudineus")
-#' rgenerator("Panulirus ornatus") #when stocks(SciName)==NA
-#' rgenerator("Anguilla japonica")
-#' rgenerator("Tegillarca granosa") #when estimate(SciName)==NA and stocks(SciName)==NA, but r information is available in the sealifebase web
+#' #grab r intrinsic growth rate parameter from the database
+#' rgenerator("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
+#' rgenerator("Hoplostethus atlanticus") #for finfish species with a high r value, data grabbed from fishbase
+#' rgenerator("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
+#'
+#' # grab r intrinsic growth parameter and use it for the next analysis
+#' r.val <- rgenerator("Hoplostethus atlanticus")
+#'
+#' library(JABBA)
+#' jbinput <- build_jabba(catch=df[,c(1,2)], cpue=data.frame(year=df[,1],cpue=df[,2]/df[,3]),
+#' r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), model.type = "Schaefer")
+#'
+#' res.bayes <- fit_jabba(jbinput, init.r=r.val$median_r, quickmcmc=TRUE)
+#'
+#' fitted_bayes <- c(res.bayes[["pars"]]$Median[1], # K
+#'                   res.bayes[["pars"]]$Median[4]*res.bayes[["pars"]]$Median[1], #B0
+#'                   res.bayes[["pars"]]$Median[2], # r
+#'                   res.bayes[["pars"]]$Median[3]) #q
+#'
 
 rGrabber <- function(SciName){
   library(rfishbase)
 
-  notes1 <- "These values are generated from the resilience information. The method gives more reliable estimation on r growth parameter (Rainer Froese pers.comm.)"
-  notes2 <- "These values are generated from stock assessment models. The method is in the evaluation process, sometimes it overestimates on r growth parameter (Rainer Froese pers.comm.)"
+  notes1 <- "These values are generated from the resilience information. The method gives more reliable estimation on r growth parameter (R. Froese pers.comm.)"
+  notes2 <- "These values are generated from stock assessment models. The method is in the evaluation process, sometimes it overestimates on r growth parameter (R. Froese pers.comm.)"
   notes3 <- "r growth parameter or resilience information for this species has not been populated to this database yet. if the information is not available when you open www.fishbase.org or www.sealifebase.org under Estimates of some properties based on models, then you might want to check from another sources"
   if(is.na(estimate(SciName)[[15]])){
     # estimates is from table 2. https://www.fishbase.de/rfroese/CMSYUserGuideMarch2021.pdf
