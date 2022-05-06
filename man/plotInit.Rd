@@ -18,6 +18,7 @@ whether the plot shows one-way trip pattern or show a good contrast as required 
 }
 \examples{
 plotInit(goodcontrast)
+plotInit(onewaytrip)
 
 }
 \references{
