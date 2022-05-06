@@ -16,6 +16,7 @@
 #'
 #' @examples
 #' plotInit(goodcontrast)
+#' plotInit(onewaytrip)
 #'
 plotInit <- function(df){
   par(mfrow=c(3,1), mar=c(3,4,1,2))
