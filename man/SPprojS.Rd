@@ -19,11 +19,24 @@ SPprojS(inpars, df, nyears, TAC = 1, sigma = 1e-06)
 sigma in default is set at a very low value (0.000001) to allow for a deterministic projection. In interest to create stochastic projection, the sigma value produced during maximum likelihood estimation or use another value can be utilized
 
 The TAC (Total Allowable Catch) is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower to be more conservative or set higher to increase more catch.
+For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy, 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2 (or other value higher than 1) and return 1.5Bmsy, 1.5MSY, and 1.5Emsy.
 }
 \description{
-Function to create projection in Schaefer's model based on different reference points.
+Function to create projection in Schaefer's model based on different reference points (Bmsy, MSY, Emsy).
 }
 \examples{
-SPprojS(inpars=fitted_pars[1:4], df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+res <- SPprojS(inpars=fitted_pars[1:4], df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+
+# create simple comparison plotting
+plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year")
+lines(res[[2]][,5], type="l", col="black")
+lines(res[[3]][,5], type="l", col="blue")
+legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+
+plot(res[[1]][,6], type="l", col="red", ylab="F/Fmsy", xlab="year")
+lines(res[[2]][,6], type="l", col="black")
+lines(res[[3]][,6], type="l", col="blue")
+legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+
 
 }
