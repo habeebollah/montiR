@@ -33,7 +33,7 @@
 
 #SPprojS_temp(inpars=inpars, df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
 
-SPprojS_temp <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
+SPprojS_temp0 <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
   K <- inpars[1]
   B0 <- inpars[2]
   r <- inpars[3]
