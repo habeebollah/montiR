@@ -18,13 +18,25 @@ Function to download intrinsic growth rate (r) parameter for specific species fr
 This function requires rfishpackage installed and internet connection.
 }
 \examples{
-rgenerator("Sardinella lemuru")
-rgenerator("Hoplostethus atlanticus")
-rgenerator("Plectropomus areolatus")
-rgenerator("Anabas testudineus")
-rgenerator("Panulirus ornatus") #when stocks(SciName)==NA
-rgenerator("Anguilla japonica")
-rgenerator("Tegillarca granosa") #when estimate(SciName)==NA and stocks(SciName)==NA, but r information is available in the sealifebase web
+#grab r intrinsic growth rate parameter from the database
+rgenerator("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
+rgenerator("Hoplostethus atlanticus") #for finfish species with a high r value, data grabbed from fishbase
+rgenerator("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
+
+# grab r intrinsic growth parameter and use it for the next analysis
+r.val <- rgenerator("Hoplostethus atlanticus")
+
+library(JABBA)
+jbinput <- build_jabba(catch=df[,c(1,2)], cpue=data.frame(year=df[,1],cpue=df[,2]/df[,3]),
+r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), model.type = "Schaefer")
+
+res.bayes <- fit_jabba(jbinput, init.r=r.val$median_r, quickmcmc=TRUE)
+
+fitted_bayes <- c(res.bayes[["pars"]]$Median[1], # K
+                  res.bayes[["pars"]]$Median[4]*res.bayes[["pars"]]$Median[1], #B0
+                  res.bayes[["pars"]]$Median[2], # r
+                  res.bayes[["pars"]]$Median[3]) #q
+
 }
 \references{
 https://www.fishbase.in/manual/key%20facts.htm
