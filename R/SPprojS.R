@@ -17,7 +17,19 @@
 #' @export
 #'
 #' @examples
-#' SPprojS(inpars=fitted_pars[1:4], df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+#' res <- SPprojS(inpars=fitted_pars[1:4], df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+#'
+#' # create simple comparison plotting
+#' plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year")
+#' lines(res[[2]][,5], type="l", col="black")
+#' lines(res[[3]][,5], type="l", col="blue")
+#' legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+#'
+#' plot(res[[1]][,6], type="l", col="red", ylab="F/Fmsy", xlab="year")
+#' lines(res[[2]][,6], type="l", col="black")
+#' lines(res[[3]][,6], type="l", col="blue")
+#' legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+#'
 #'
 
 
