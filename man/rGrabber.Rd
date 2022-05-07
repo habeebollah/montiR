@@ -19,16 +19,17 @@ This function requires rfishpackage installed and internet connection.
 }
 \examples{
 #grab r intrinsic growth rate parameter from the database
-rgenerator("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
-rgenerator("Hoplostethus atlanticus") #for finfish species with a high r value, data grabbed from fishbase
-rgenerator("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
+rGrabber("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
+rGrabber("Hoplostethus atlanticus") #for finfish species with a low r value, data grabbed from fishbase
+rGrabber("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
 
 # grab r intrinsic growth parameter and use it for the next analysis
-r.val <- rgenerator("Hoplostethus atlanticus")
+r.val <- rGrabber("Hoplostethus atlanticus")
 
-library(JABBA)
+library("JABBA")
 jbinput <- build_jabba(catch=df[,c(1,2)], cpue=data.frame(year=df[,1],cpue=df[,2]/df[,3]),
-r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), model.type = "Schaefer")
+                       r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), # sd is estimated at 0.5 since there is no way to calculate this value from provided mean and 95\% CI
+                       model.type = "Schaefer") # alternatively it can be exchanged with Fox
 
 res.bayes <- fit_jabba(jbinput, init.r=r.val$median_r, quickmcmc=TRUE)
 

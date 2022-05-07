@@ -15,16 +15,17 @@
 #'
 #' @examples
 #' #grab r intrinsic growth rate parameter from the database
-#' rgenerator("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
-#' rgenerator("Hoplostethus atlanticus") #for finfish species with a high r value, data grabbed from fishbase
-#' rgenerator("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
+#' rGrabber("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
+#' rGrabber("Hoplostethus atlanticus") #for finfish species with a low r value, data grabbed from fishbase
+#' rGrabber("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
 #'
 #' # grab r intrinsic growth parameter and use it for the next analysis
-#' r.val <- rgenerator("Hoplostethus atlanticus")
+#' r.val <- rGrabber("Hoplostethus atlanticus")
 #'
-#' library(JABBA)
+#' library("JABBA")
 #' jbinput <- build_jabba(catch=df[,c(1,2)], cpue=data.frame(year=df[,1],cpue=df[,2]/df[,3]),
-#' r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), model.type = "Schaefer")
+#'                        r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), # sd is estimated at 0.5 since there is no way to calculate this value from provided mean and 95% CI
+#'                        model.type = "Schaefer") # alternatively it can be exchanged with Fox
 #'
 #' res.bayes <- fit_jabba(jbinput, init.r=r.val$median_r, quickmcmc=TRUE)
 #'
@@ -35,13 +36,13 @@
 #'
 
 rGrabber <- function(SciName){
-  library(rfishbase)
+  requireNamespace(rfishbase)
 
   notes1 <- "These values are generated from the resilience information. The method gives more reliable estimation on r growth parameter (R. Froese pers.comm.)"
   notes2 <- "These values are generated from stock assessment models. The method is in the evaluation process, sometimes it overestimates on r growth parameter (R. Froese pers.comm.)"
   notes3 <- "r growth parameter or resilience information for this species has not been populated to this database yet. if the information is not available when you open www.fishbase.org or www.sealifebase.org under Estimates of some properties based on models, then you might want to check from another sources"
   if(is.na(estimate(SciName)[[15]])){
-    # estimates is from table 2. https://www.fishbase.de/rfroese/CMSYUserGuideMarch2021.pdf
+    # estimates use resilience value from table 2. https://www.fishbase.de/rfroese/CMSYUserGuideMarch2021.pdf
     temp <- ifelse(is.na(stocks(SciName)[[38]]), res <- notes3,
                    ifelse(stocks(SciName)[[38]]=="High",
                           res <- list(median_r=median(c(0.6,1.5)), lci_r=0.6, uci_r=1.5, resilience="High", notes=notes1),
