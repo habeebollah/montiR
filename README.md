@@ -9,27 +9,29 @@ Tool ini menghitung jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ik
 
 Metode multiple regression masih banyak digunakan untuk menghitung jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) dengan asumsi non-equilibrium untuk model Schaefer. Metode yang paling banyak digunakan disebut menghasilkan bias terhadap parameter yang diestimasi, sehingga menghasilkan perhitungan MSY dan Emsy yang juga bias. Revisi dari metode ini kurang banyak digunakan, selain itu semua metode yang menggunakan multiple regression disebut memiliki kelemahan jika menggunakan data yang memiliki tipe one way trip.  
 
-(3) Data plotting
+(3) Surplus produksi dengan asumsi non-equilibrium menggunakan data fitting
+
+(3.a) Data plotting
 
 Langkah paling penting sebelum melakukan analisis data adalah memeriksa apakah data yang akan digunakan memenuhi persyaratan dan asumsi yang dibutuhkan untuk analisis biomass dynamic model, termasuk memilih jenis langkah apa yang harus dilakukan ketika data yang dibutuhkan tidak memenuhi asumsi
 
-(4) Surplus produksi dengan asumsi non-equilibrium menggunakan time series fitting
+(3.b) Surplus produksi dengan asumsi non-equilibrium menggunakan time series fitting
 
 Tool ini melakukan estimasi parameter K, B0, r, q dan menentukan jumlah tangkapan ikan lestari (MSY), biomassa ikan lestari (Bmsy), serta upaya penangkapan ikan lestari (Emsy) menggunakan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox. Tool ini sudah disesuaikan untuk kebutuhan data yang terbatas (dapat mengakomodasi hilangnya input data upaya penangkapan) serta sudah memperhitungkan kesalahan dalam pengambilan data (observation error). Metode time series fitting disebut sebagai metode yang lebih baik dibandingkan dengan dua metode lain (metode equilibrium dan multiple regression) yang digunakan untuk melakukan estimasi parameter dalam model surplus produksi. Sebagian kecil dari kita sudah menggunakan metode ini, tetapi pelaksanaan analisisnya masih perlu disempurnakan agar tidak berakibat pada kurang tepatnya perhitungan MSY, Bmsy dan Emsy
 
-(5) Mengambil data prior untuk parameter pertumbuhan r sebagai input pendugaan stok di tingkat spesies
-
-Data prior setiap spesies untuk parameter pertumbuhan r diambil dari database fishbase dan sealifebase untuk mendukung pendugaan stok di tingkat spesies. Contoh langkah lanjutan untuk melakukan estimasi parameter surplus production menggunakan pendekatan bayesian dan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox sehingga menghasilkan pendugaan stok yang lebih akurat di tingkat spesies juga diberikan.
-
-(6) Menghitung reference point untuk pengelolaan
+(3.c) Menghitung reference point untuk pengelolaan
 
 Tool ini menghasilkan jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) untuk model Schaefer dan Fox.
 
-(7) Menghitung standard error dari reference point
+(3.d) Menghitung standard error dari reference point
 
 Tool ini mengestimasi jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) serta menghitung standard error menggunakan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox.
 
-(8) Membuat proyeksi atas kebijakan reference point berdasar tingkat pemanfaatan perikanan
+(4) Mengambil data prior untuk parameter pertumbuhan r sebagai input pendugaan stok di tingkat spesies menggunakan bayesian
+
+Data prior setiap spesies untuk parameter pertumbuhan r diambil dari database fishbase dan sealifebase untuk mendukung pendugaan stok di tingkat spesies. Contoh langkah lanjutan untuk melakukan estimasi parameter surplus production menggunakan pendekatan bayesian dan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox sehingga menghasilkan pendugaan stok yang lebih akurat di tingkat spesies juga diberikan.
+
+(5) Membuat proyeksi atas kebijakan reference point berdasar tingkat pemanfaatan perikanan
 
 Tool ini akan membuat grafik proyeksi biomass per biomass at msy (B/Bmsy) dan fishing per fishing at msy (F/Fmsy) sebagai panduan untuk melihat kebijakan yang akan dibuat berdasarkan Bmsy, MSY dan Emsy sebagai reference point. Proyeksi dibuat dengan pendekatan deterministic secara default, dan terdapat opsi untuk tujuan stochastic.
 
