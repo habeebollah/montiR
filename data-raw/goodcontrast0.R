@@ -17,8 +17,8 @@ for (i in 1:nYears) {
   CPUE[i] <- C[i] / effort[i]
 }
 
-goodcontrast0 <- data.frame(year=1981:2000,
+df.goodcontrast0 <- data.frame(year=1981:2000,
                             catch = C,
                             effort = effort)
 
-usethis::use_data(goodcontrast0, overwrite = TRUE)
+usethis::use_data(df.goodcontrast0, overwrite = TRUE)

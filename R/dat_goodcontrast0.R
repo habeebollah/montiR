@@ -12,4 +12,4 @@
 #'
 #' @references Magnusson, Arni, and Ray Hilborn. "What makes fisheries data informative?." Fish and Fisheries 8, no. 4 (2007): 337-358.
 #'
-"goodcontrast0"
+"df.goodcontrast0"

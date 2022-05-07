@@ -17,8 +17,8 @@ for (i in 1:nYears) {
   CPUE[i] <- C[i] / effort[i]
 }
 
-onewaytrip0 <- data.frame(year=1981:2000,
+df.onewaytrip0 <- data.frame(year=1981:2000,
                           catch = C,
                           effort = effort)
 
-usethis::use_data(onewaytrip0, overwrite = TRUE)
+usethis::use_data(df.onewaytrip0, overwrite = TRUE)

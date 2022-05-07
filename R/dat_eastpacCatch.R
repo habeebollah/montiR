@@ -11,4 +11,4 @@
 #'
 #' @references Schaefer, Milner Baily. "A study of the dynamics of the fishery for yellow fin tuna in the eastern tropical Pacific Ocean." Bull. Inter-Amer. Trop. Tuna Comm. 2 (1957): 247-285.
 #'
-"eastpacCatch"
+"df.eastpacCatch"

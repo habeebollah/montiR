@@ -12,4 +12,4 @@
 
 #' @references Dwiponggo, A. "Review of the demersal resources and fisheries in the Java Sea." Marine Fisheries Research Institute, Agency for Agricultural Research and Development, Ministry of Agriculture, Jakarta, Indonesia 36 (1979). Paper presented at th SCORRAD Meeting, 1979, Hong Kong.
 #'
-"javaTrawl"
+"df.javaTrawl"
