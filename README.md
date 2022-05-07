@@ -5,9 +5,9 @@ montiR (Model biOmass diNamik singkaT dI R) merupakan kumpulan model biomas dina
 
 Tool ini menghitung jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) dengan asumsi equilibrium untuk model Schaefer dan Fox. Pendekatan ini ditampilkan disini hanya untuk tujuan edukasi sebagai contoh model yang akan memberikan estimasi MSY dan Emsy yang lebih tinggi, sehingga sangat tidak disarankan untuk dijadikan sebagai panduan dalam pengambilan kebijakan perikanan. Overestimasi reference point pada kondisi ketika status perikanan sedang dalam kondisi overexploited akan memberikan ilusi bahwa stok ikan masih banyak, sehingga dapat merugikan pelaku perikanan karena jumlah tangkapan yang rendah dan merugikan stok ikan karena semakin tingginya pemanfaatan. Banyak dari kita yang masih menggunakan metode ini, meskipun sudah tidak disarankan untuk digunakan sejak 1980an.
 
-(2) Surplus produksi dengan asumsi equilibrium menggunakan multiple regression
+(2) Surplus produksi dengan asumsi non-equilibrium menggunakan multiple regression
 
-Metode multiple regression masih banyak digunakan untuk menghitung jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) dengan asumsi equilibrium untuk model Schaefer. Metode yang paling banyak digunakan disebut menghasilkan bias terhadap parameter yang diestimasi, sehingga menghasilkan perhitungan MSY dan Emsy yang juga bias. Revisi dari metode ini kurang banyak digunakan dan masih memiliki kelemahan jika menggunakan data yang memiliki tipe one way trip.  
+Metode multiple regression masih banyak digunakan untuk menghitung jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) dengan asumsi non-equilibrium untuk model Schaefer. Metode yang paling banyak digunakan disebut menghasilkan bias terhadap parameter yang diestimasi, sehingga menghasilkan perhitungan MSY dan Emsy yang juga bias. Revisi dari metode ini kurang banyak digunakan, selain itu semua metode yang menggunakan multiple regression disebut memiliki kelemahan jika menggunakan data yang memiliki tipe one way trip.  
 
 (3) Data plotting
 
@@ -31,7 +31,7 @@ Tool ini mengestimasi jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ika
 
 (8) Membuat proyeksi atas kebijakan reference point berdasar tingkat pemanfaatan perikanan
 
-Tool ini akan membuat grafik proyeksi biomass per biomass at msy (B/Bmsy) dan fishing per fishing at msy (F/Fmsy) sebagai panduan untuk melihat kebijakan yang akan dibuat berdasarkan Bmsy, MSY dan Emsy sebagai reference point. Proyeksi dibuat dengan pendekatan deterministic secara default, dan terdapat opsi untuk tujuan stochastic
+Tool ini akan membuat grafik proyeksi biomass per biomass at msy (B/Bmsy) dan fishing per fishing at msy (F/Fmsy) sebagai panduan untuk melihat kebijakan yang akan dibuat berdasarkan Bmsy, MSY dan Emsy sebagai reference point. Proyeksi dibuat dengan pendekatan deterministic secara default, dan terdapat opsi untuk tujuan stochastic.
 
 ## Installation
 
