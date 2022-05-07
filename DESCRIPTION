@@ -8,7 +8,6 @@ Description: montiR (Model biOmass diNamik singkaT dI R) merupakan kumpulan mode
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: rfishbase
 RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
