@@ -35,6 +35,10 @@ Data prior setiap spesies untuk parameter pertumbuhan r diambil dari database fi
 
 Tool ini akan membuat grafik proyeksi biomass per biomass at msy (B/Bmsy) dan fishing per fishing at msy (F/Fmsy) sebagai panduan untuk melihat kebijakan yang akan dibuat berdasarkan Bmsy, MSY dan Emsy sebagai reference point. Proyeksi dibuat dengan pendekatan deterministic secara default, dan terdapat opsi untuk tujuan stochastic.
 
+## Struktur fungsi di montiR 
+Fungsi-fungsi yang digunakan di montiR dibangun dengan struktur sesuai dengan gambar berikut
+![Struktur fungsi](/images/montiR_fxx.png)
+
 ## Installation
 
 Anda dapat mengunduh dan menginstal package ini melalui link berikut:
