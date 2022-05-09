@@ -23,21 +23,6 @@ rGrabber("Sardinella lemuru") #for finfish species with a high r value, data gra
 rGrabber("Hoplostethus atlanticus") #for finfish species with a low r value, data grabbed from fishbase
 rGrabber("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
 
-# grab r intrinsic growth parameter and use it for the next analysis
-r.val <- rGrabber("Hoplostethus atlanticus")
-
-library("JABBA")
-jbinput <- build_jabba(catch=df[,c(1,2)], cpue=data.frame(year=df[,1],cpue=df[,2]/df[,3]),
-                       r.dist = c("lnorm", "range"), r.prior=c(r.val$median_r, 0.5), # sd is estimated at 0.5 since there is no way to calculate this value from provided mean and 95\% CI
-                       model.type = "Schaefer") # alternatively it can be exchanged with Fox
-
-res.bayes <- fit_jabba(jbinput, init.r=r.val$median_r, quickmcmc=TRUE)
-
-fitted_bayes <- c(res.bayes[["pars"]]$Median[1], # K
-                  res.bayes[["pars"]]$Median[4]*res.bayes[["pars"]]$Median[1], #B0
-                  res.bayes[["pars"]]$Median[2], # r
-                  res.bayes[["pars"]]$Median[3]) #q
-
 }
 \references{
 https://www.fishbase.in/manual/key%20facts.htm
