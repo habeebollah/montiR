@@ -43,7 +43,7 @@ startPars <- c(log(Bmsy), log(MSY), log(Emsy), log(B0), log(0.1))
 
 fit <- optim(par=startPars,
              fn=SparRP_min,
-             df=goodcontrast,
+             df=df.goodcontrast,
              method="Nelder-Mead",
              OWT=FALSE, Frate = 0.7, weight = 100,
              hessian=TRUE)

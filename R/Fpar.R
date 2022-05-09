@@ -23,7 +23,7 @@
 #' q <- 0.00025
 #'
 #' inpars <- c(log(K), log(B0), log(r), log(q))
-#' Fpar(inpars=inpars, df=goodcontrast)
+#' Fpar(inpars=inpars, df=df.goodcontrast)
 #'
 Fpar <- function(inpars, df){
   K <- inpars[1]

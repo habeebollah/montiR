@@ -19,7 +19,7 @@
 #' Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models: Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
 #'
 #' @examples
-#' SF_Eq(goodcontrast)
+#' SF_Eq(df.javaTrawl)
 #'
 SF_Eq <- function(df){
 

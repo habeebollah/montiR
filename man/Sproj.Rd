@@ -27,9 +27,9 @@ For instance, when the TAC is set conservative at 0.8 of reference point, it wil
 Function to create projection in Schaefer's model based on different reference points (Bmsy, MSY, Emsy) and different Total Allowable Catch setting (TAC). This projection can be used to assist in the development of limit and target reference point.
 }
 \examples{
-res <- Sproj(inpars=fitted_pars[1:4], df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+res <- Sproj(inpars=fitted_pars[1:4], df=df.goodcontrast, nyears=30, TAC=1, sigma=0.000001)
 
-# create simple comparison plotting
+# create simple comparison B/Bmsy and F/Fmsy plotting
 plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year")
 lines(res[[2]][,5], type="l", col="black")
 lines(res[[3]][,5], type="l", col="blue")

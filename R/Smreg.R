@@ -17,7 +17,7 @@
 #' Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice, dynamics and uncertainty. Springer Science & Business Media, 1992.
 #'
 #' @examples
-#' Smreg(eastpacCatch)
+#' Smreg(df.eastpacCatch)
 #'
 Smreg <- function(df){
 

@@ -37,7 +37,7 @@ inpars <- c(log(K), log(B0), log(r), log(q), log(0.1))
 
 fit <- optim(par=inpars,
              fn=Fpar_min,
-             df=goodcontrast,
+             df=df.goodcontrast,
              method="Nelder-Mead",
              OWT=FALSE, Frate = 0.7, weight = 100,
              hessian=TRUE)

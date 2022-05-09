@@ -17,8 +17,8 @@ This function plot the catch, effort and CPUE from a dataframe to check,
 whether the plot shows one-way trip pattern or show a good contrast as required for the biomass dynamic model.
 }
 \examples{
-plotInit(goodcontrast)
-plotInit(onewaytrip)
+plotInit(df.goodcontrast)
+plotInit(df.onewaytrip)
 
 }
 \references{

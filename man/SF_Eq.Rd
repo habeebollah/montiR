@@ -20,7 +20,7 @@ This is just for educational purposes, do not use the result of this analysis fo
 as assumptions in this approach is rarely met and usually leads to potential yield and optimum effort overestimation (Hilborn and Walter, 1992; Polacheck, et al. 1993)
 }
 \examples{
-SF_Eq(goodcontrast)
+SF_Eq(df.javaTrawl)
 
 }
 \references{

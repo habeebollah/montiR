@@ -15,8 +15,8 @@
 #' Magnusson, Arni, and Ray Hilborn. "What makes fisheries data informative?." Fish and Fisheries 8, no. 4 (2007): 337-358.
 #'
 #' @examples
-#' plotInit(goodcontrast)
-#' plotInit(onewaytrip)
+#' plotInit(df.goodcontrast)
+#' plotInit(df.onewaytrip)
 #'
 plotInit <- function(df){
   par(mfrow=c(3,1), mar=c(3,4,1,2))

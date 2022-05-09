@@ -18,9 +18,9 @@
 #' @export
 #'
 #' @examples
-#' res <- Sproj(inpars=fitted_pars[1:4], df=goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+#' res <- Sproj(inpars=fitted_pars[1:4], df=df.goodcontrast, nyears=30, TAC=1, sigma=0.000001)
 #'
-#' # create simple comparison plotting
+#' # create simple comparison B/Bmsy and F/Fmsy plotting
 #' plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year")
 #' lines(res[[2]][,5], type="l", col="black")
 #' lines(res[[3]][,5], type="l", col="blue")

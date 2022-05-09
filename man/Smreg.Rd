@@ -18,7 +18,7 @@ The least square in the Walters and Hilborn (1976)'s multiple regression produce
 Based on the input, Hilborn and Walters (1992) adjusted the equation as input in the multiple regression.
 }
 \examples{
-Smreg(eastpacCatch)
+Smreg(df.eastpacCatch)
 
 }
 \references{

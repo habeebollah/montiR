@@ -39,7 +39,7 @@
 #'
 #' fit <- optim(par=startPars,
 #'              fn=FparRP_min,
-#'              df=goodcontrast,
+#'              df=df.goodcontrast,
 #'              method="Nelder-Mead",
 #'              OWT=FALSE, Frate = 0.7, weight = 100,
 #'              hessian=TRUE)
