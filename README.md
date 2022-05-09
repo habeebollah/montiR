@@ -27,9 +27,9 @@ Tool ini menghasilkan jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ika
 
 Tool ini mengestimasi jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) serta menghitung standard error menggunakan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox.
 
-(4) Mengambil data prior untuk parameter pertumbuhan r sebagai input pendugaan stok di tingkat spesies menggunakan bayesian
+(4) Meningkatkan akurasi pendugaan stok dengan surplus production di tingkat spesies menggunakan bayesian
 
-Data prior setiap spesies untuk parameter pertumbuhan r diambil dari database fishbase dan sealifebase untuk mendukung pendugaan stok di tingkat spesies. Contoh langkah lanjutan untuk melakukan estimasi parameter surplus production menggunakan pendekatan bayesian dan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox sehingga menghasilkan pendugaan stok yang lebih akurat di tingkat spesies juga diberikan.
+Data prior setiap spesies untuk parameter pertumbuhan r diambil dari database fishbase dan sealifebase untuk mendukung pendugaan stok di tingkat spesies. Langkah lanjutan untuk melakukan estimasi parameter surplus production menggunakan pendekatan bayesian dan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer dan Fox sehingga menghasilkan pendugaan stok yang lebih akurat di tingkat spesies juga diberikan.
 
 (5) Membuat proyeksi atas kebijakan reference point berdasar tingkat pemanfaatan perikanan
 
