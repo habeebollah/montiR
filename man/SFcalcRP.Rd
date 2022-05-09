@@ -9,7 +9,7 @@ SFcalcRP(inpars, SPmodel)
 \arguments{
 \item{inpars}{surplus production parameters which consist of K (carrying capacity), B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)}
 
-\item{SPmodel}{option on Surplus Production model; Schaefer or Fox}
+\item{SPmodel}{option on Surplus Production model; 1 for Schaefer and 2 for Fox}
 }
 \value{
 
@@ -24,7 +24,7 @@ r <- 0.2
 q <- 0.00025
 
 inpars <- c(K, B0, r, q)
-SFcalcRP(inpars=inpars, SPmodel="Schaefer")
+SFcalcRP(inpars=inpars, SPmodel=2)
 
 }
 \references{

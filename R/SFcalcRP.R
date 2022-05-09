@@ -4,7 +4,7 @@
 #' This function is used to calculate the reference points (Bmsy, MSY, Emsy) under Schaefer and Fox model
 #'
 #' @param inpars surplus production parameters which consist of K (carrying capacity), B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
-#' @param SPmodel option on Surplus Production model; Schaefer or Fox
+#' @param SPmodel option on Surplus Production model; 1 for Schaefer and 2 for Fox
 #'
 #' @return
 #' @export
@@ -21,7 +21,7 @@
 #' q <- 0.00025
 #'
 #' inpars <- c(K, B0, r, q)
-#' SFcalcRP(inpars=inpars, SPmodel="Schaefer")
+#' SFcalcRP(inpars=inpars, SPmodel=2)
 #'
 
 SFcalcRP <- function(inpars, SPmodel){
@@ -30,11 +30,7 @@ SFcalcRP <- function(inpars, SPmodel){
   r <- inpars[3]
   q <- inpars[4]
 
-  if(SPmodel=="Schaefer"){
-    res <- list(Bmsy = K/2, MSY = (r*K)/4, Emsy = r/(2*q))
-  }
-  else{
-    res <- list(Bmsy = K/exp(1), MSY = (r*K)/(exp(1)*log(K)), Emsy = r/q)
-  }
-  return(res)
+  ifelse(SPmodel==1, res <- list(Bmsy = K/2, MSY = (r*K)/4, Emsy = r/(2*q)),
+         ifelse(SPmodel==2, res <- list(Bmsy = K/exp(1), MSY = (r*K)/(exp(1)*log(K)), Emsy = r/q), res <- "wrong SPmodel code!"))
+return(res)
 }
