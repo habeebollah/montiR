@@ -33,6 +33,7 @@ Smreg <- function(df){
   q1 <- -mreg1$coefficients[[3]]
   K1 <- -r1/(mreg1$coefficients[[2]]*q1)
 
+  Bmsy1 <- K1/2
   MSY1 <- (r1*K1)/4
   Emsy1 <- r1/(2*q1)
 
@@ -48,12 +49,13 @@ Smreg <- function(df){
   q2 <- -mreg2$coefficients[[4]]
   K2 <- -r2/(mreg2$coefficients[[3]]*q2)
 
+  Bmsy2 <- K2/2
   MSY2 <- (r2*K2)/4
   Emsy2 <- r2/(2*q2)
 
-  res <- data.frame(analysis=c("K", "r", "q", "MSY", "Emsy", "r2", "adj.r2"),
-                    WH.1976=c(K1, r1, q1, MSY1, Emsy1, summary(mreg1)$r.squared, summary(mreg1)$adj.r.squared),
-                    HW.1992=c(K2, r2, q2, MSY2, Emsy2, summary(mreg2)$r.squared, summary(mreg2)$adj.r.squared))
+  res <- data.frame(analysis=c("K", "r", "q", "Bmsy", "MSY", "Emsy", "r2", "adj.r2"),
+                    WH.1976=c(K1, r1, q1, Bmsy1, MSY1, Emsy1, summary(mreg1)$r.squared, summary(mreg1)$adj.r.squared),
+                    HW.1992=c(K2, r2, q2, Bmsy2, MSY2, Emsy2, summary(mreg2)$r.squared, summary(mreg2)$adj.r.squared))
   return(res)
 }
 
