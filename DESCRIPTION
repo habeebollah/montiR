@@ -7,6 +7,7 @@ Maintainer: Abdullah Habibi <habeebollah@yahoo.com>
 Description: montiR (Model biOmass diNamik singkaT dI R) merupakan kumpulan model biomas dinamik dengan pendekatan time series fitting.
 License: GPL-3
 Encoding: UTF-8
+Imports: rfishbase, JABBA
 LazyData: true
 RoxygenNote: 7.1.2
 Depends: 
