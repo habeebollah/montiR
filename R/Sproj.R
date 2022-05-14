@@ -1,19 +1,27 @@
 #' @title Schaefer's projection function
 #'
 #' @description
-#' Function to create projection in Schaefer's model based on different reference points (Bmsy, MSY, Emsy) and different Total Allowable Catch setting (TAC). This projection can be used to assist in the development of limit and target reference point.
+#' Function to create projection in Schaefer's model based on different reference points (Bmsy, MSY, Emsy) and
+#' different Total Allowable Catch setting (TAC). This projection can be used to assist in the development of
+#' limit and target reference point.
 #'
-#' @param inpars fitted surplus production parameters which consist of K (carrying capacity), B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
+#' @param inpars fitted surplus production parameters which consist of K (carrying capacity),
+#' B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
 #' @param df dataframe containing three columns; year, catch and effort
 #' @param nyears number of years the projection for the fishery
 #' @param TAC number to drive the management level
 #' @param sigma standard deviation estimated in the surplus production data fitting process
 #'
 #' @return
-#' sigma in default is set at a very low value (0.000001) to allow for a deterministic projection. In interest to create stochastic projection, the sigma value produced during maximum likelihood estimation or use another value can be utilized
+#' sigma in default is set at a very low value (0.000001) to allow for a deterministic projection. In
+#' interest to create stochastic projection, the sigma value produced during maximum likelihood estimation
+#' or use another value can be utilized
 #'
-#' The TAC is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower to be more conservative or set higher to increase more catch.
-#' For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy, 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2 (or other value higher than 1) and return 1.5Bmsy, 1.5MSY, and 1.5Emsy.
+#' The TAC is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower
+#' to be more conservative or set higher to increase more catch.
+#' For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy,
+#' 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2
+#' (or other value higher than 1) and return 1.5Bmsy, 1.5MSY, and 1.5Emsy.
 #'
 #' @export
 #'

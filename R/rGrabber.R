@@ -1,7 +1,8 @@
 #' @title Grab intrinsic growth rate (r) parameter from Fishbase and SeaLifebase
 #'
 #' @description
-#' Function to download intrinsic growth rate (r) parameter for specific species from Fishbase and SeaLifebase. The r growth parameter will serve as prior in the bayesian analysis in the surplus production model.
+#' Function to download intrinsic growth rate (r) parameter for specific species from Fishbase
+#' and SeaLifebase. The r growth parameter will serve as prior in the bayesian analysis in the surplus production model.
 #'
 #' This function requires rfishpackage installed and internet connection.
 #'
@@ -15,6 +16,7 @@
 #'
 #' @examples
 #' #grab r intrinsic growth rate parameter from the database
+#' library("rfishbase")
 #' rGrabber("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
 #' rGrabber("Hoplostethus atlanticus") #for finfish species with a low r value, data grabbed from fishbase
 #' rGrabber("Anguilla japonica") # for non finfish species, data grabbed from sealifebase
@@ -22,11 +24,13 @@
 
 
 rGrabber <- function(SciName){
-  requireNamespace(rfishbase)
-
-  notes1 <- "These values are generated from the resilience information. The method gives more reliable estimation on r growth parameter (R. Froese pers.comm.)"
-  notes2 <- "These values are generated from stock assessment models. The method is in the evaluation process, sometimes it overestimates on r growth parameter (R. Froese pers.comm.)"
-  notes3 <- "r growth parameter or resilience information for this species has not been populated to this database yet. if the information is not available when you open www.fishbase.org or www.sealifebase.org under Estimates of some properties based on models, then you might want to check from another sources"
+  notes1 <- "These values are generated from the resilience information.
+  The method gives more reliable estimation on r growth parameter (R. Froese pers.comm.)"
+  notes2 <- "These values are generated from stock assessment models.
+  The method is in the evaluation process, sometimes it overestimates on r growth parameter (R. Froese pers.comm.)"
+  notes3 <- "r growth parameter or resilience information for this species has not been populated to this database yet.
+  if the information is not available when you open www.fishbase.org or www.sealifebase.org
+  under Estimates of some properties based on models, then you might want to check from another sources"
   if(is.na(estimate(SciName)[[15]])){
     # estimates use resilience value from table 2. https://www.fishbase.de/rfroese/CMSYUserGuideMarch2021.pdf
     temp <- ifelse(is.na(stocks(SciName)[[38]]), res <- notes3,

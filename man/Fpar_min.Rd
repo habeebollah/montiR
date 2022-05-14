@@ -7,24 +7,34 @@
 Fpar_min(inpars, df, OWT = FALSE, Frate = 0.7, weight = 100)
 }
 \arguments{
-\item{inpars}{surplus production parameters which consist of K (carrying capacity), B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)}
+\item{inpars}{surplus production parameters which consist of K (carrying capacity), B0
+(biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)}
 
 \item{df}{dataframe containing three columns; year, catch and effort}
 
-\item{OWT}{is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be replaced with TRUE when the plot shows One Way Trip}
+\item{OWT}{is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
+replaced with TRUE when the plot shows One Way Trip}
 
 \item{Frate}{exploitation rate collected from other survey. The default is 0.7}
 
-\item{weight}{weight given to the deviation between observed and predicted value in exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result}
+\item{weight}{weight given to the deviation between observed and predicted value in
+exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result}
 }
 \value{
 
 }
 \description{
-Function used in the maximum likelihood minimization to estimate Fox's biomass dynamic model parameters using lognormal distribution. The use of lognormal in maximum likelihood is important to remove potential error during data collection  (Polacheck et al., 1993).
-Since fishing effort data collection are not always conducted regularly while catch is likely have a better time series information, this function also allow for some lose of data.
+Function used in the maximum likelihood minimization to estimate Fox' reference points
+using lognormal distribution. The use of lognormal in maximum likelihood is important
+since the index of abundance is assumed to follow lognormal distribution and
+all the observation errors is the result of the relationships between stock biomass and index of
+abundance which requires to be estimated (Polacheck et al., 1993).
 
-This function also consider the different quality data, for instance if the data shows a one way trip pattern which losing increasing rate of increase.
+Since fishing effort data collection are not always conducted regularly while catch is likely
+have a better time series information, this function also allow for some lose of data.
+
+This function also consider the different quality data, for instance if the data shows
+a one way trip pattern which losing increasing rate of increase.
 }
 \examples{
 K <- 1000
@@ -39,8 +49,7 @@ fit <- optim(par=inpars,
              fn=Fpar_min,
              df=df.goodcontrast,
              method="Nelder-Mead",
-             OWT=FALSE, Frate = 0.7, weight = 100,
-             hessian=TRUE)
+             OWT=FALSE, Frate = 0.7, weight = 100)
 
 Fpar_vals <- data.frame(SPpar = c("K", "B0", "r", "q", "sigma"),
                          init_pars = c(K, B0, r, q, 0.1),
@@ -48,9 +57,12 @@ Fpar_vals <- data.frame(SPpar = c("K", "B0", "r", "q", "sigma"),
 
 }
 \references{
-Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice, dynamics and uncertainty. Springer Science & Business Media, 1992.
+Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+dynamics and uncertainty. Springer Science & Business Media, 1992.
 
-Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models: Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
+Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models:
+Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
 
-Bonfil, R. 2005. ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil, Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
+Bonfil, R. 2005. ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil,
+Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
 }

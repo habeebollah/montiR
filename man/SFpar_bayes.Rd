@@ -4,7 +4,17 @@
 \alias{SFpar_bayes}
 \title{Schaefer and Fox' parameter estimation using bayesian}
 \usage{
-SFpar_bayes(df, K.prior = NULL, psi.prior = c(0.9, 0.25), r.prior, SPmodel)
+SFpar_bayes(
+  df,
+  K.prior = NULL,
+  psi.prior = c(0.9, 0.25),
+  r.prior,
+  SPmodel,
+  ni = 30000,
+  nt = 5,
+  nb = 5000,
+  nc = 2
+)
 }
 \arguments{
 \item{df}{dataframe containing three columns; year, catch and effort}
@@ -16,18 +26,29 @@ SFpar_bayes(df, K.prior = NULL, psi.prior = c(0.9, 0.25), r.prior, SPmodel)
 \item{r.prior}{intrinsic growth rate (r) parameter prior. The default is (mu, cv) with mu from rGrabber median parameter and cv is set at 0.5}
 
 \item{SPmodel}{option on Surplus Production model; 1 for Schaefer and 2 for Fox}
+
+\item{ni}{number of iterations used in the MCMC process. The default is 30000}
+
+\item{nt}{thinning interval of saved iterations. The default is 5}
+
+\item{nb}{number of iterations to discard (burn-in) in the initial MCMC process. The default is 5000}
+
+\item{nc}{number of MCMC chains initial values. The default is 2}
 }
 \value{
 
 }
 \description{
-Function to estimate the Schaefer and Fox' parameter using bayesian approach. This approach requires r from the assessed species as input prior in the bayesian,
+Function to estimate the Schaefer and Fox' parameter using bayesian approach.
+This approach requires r from the assessed species as input prior in the bayesian,
 to increase the accuracy of surplus production parameter estimation in Schaefer and Fox model.
 
-This function requires JABBA package installed.
+This function requires JABBA package installed. By default, the Markov Chain Monte Carlo (MCMC) method
+is used to create a desired sample required in the bayesian analysis.
 }
 \examples{
 # grab r intrinsic growth parameter and use it for the next analysis
+library("rfishbase")
 r.val <- rGrabber("Hoplostethus atlanticus")
 
 library("JABBA")

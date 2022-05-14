@@ -13,12 +13,14 @@ rGrabber(SciName)
 
 }
 \description{
-Function to download intrinsic growth rate (r) parameter for specific species from Fishbase and SeaLifebase. The r growth parameter will serve as prior in the bayesian analysis in the surplus production model.
+Function to download intrinsic growth rate (r) parameter for specific species from Fishbase
+and SeaLifebase. The r growth parameter will serve as prior in the bayesian analysis in the surplus production model.
 
 This function requires rfishpackage installed and internet connection.
 }
 \examples{
 #grab r intrinsic growth rate parameter from the database
+library("rfishbase")
 rGrabber("Sardinella lemuru") #for finfish species with a high r value, data grabbed from fishbase
 rGrabber("Hoplostethus atlanticus") #for finfish species with a low r value, data grabbed from fishbase
 rGrabber("Anguilla japonica") # for non finfish species, data grabbed from sealifebase

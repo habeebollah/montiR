@@ -1,20 +1,25 @@
 #' @title Fox's data fitting and plotting
 #'
 #' @description
-#' This function is used to predict the initial Biomass Dynamic Model parameters as input to do the estimation in the latter process.
+#' This function is used to predict the initial Biomass Dynamic Model parameters as input to do
+#' the estimation in the latter process.
 #'
-#' It also works to check the result of estimated parameters by plotting the data, whether the data and estimated parameter is fitted.
+#' It also works to check the result of estimated parameters by plotting the data, whether the
+#' data and estimated parameter is fitted.
 #'
-#' @param inpars surplus production parameters which consist of K (carrying capacity), B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
+#' @param inpars surplus production parameters which consist of K (carrying capacity), B0
+#' (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
 #' @param df dataframe containing three columns; year, catch and effort
 #'
 #' @return
 #' @export
 #'
 #' @references
-#' Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice, dynamics and uncertainty. Springer Science & Business Media, 1992.
+#' Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+#' dynamics and uncertainty. Springer Science & Business Media, 1992.
 #'
-#' Bonfil, R. 2005. ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil, Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
+#' Bonfil, R. 2005. ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil,
+#' Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
 #'
 #' @examples
 #' K <- 1000

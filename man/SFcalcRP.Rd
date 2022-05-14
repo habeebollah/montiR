@@ -7,7 +7,8 @@
 SFcalcRP(inpars, SPmodel)
 }
 \arguments{
-\item{inpars}{surplus production parameters which consist of K (carrying capacity), B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)}
+\item{inpars}{surplus production parameters which consist of K (carrying capacity),
+B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)}
 
 \item{SPmodel}{option on Surplus Production model; 1 for Schaefer and 2 for Fox}
 }
@@ -28,7 +29,9 @@ SFcalcRP(inpars=inpars, SPmodel=2)
 
 }
 \references{
-Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice, dynamics and uncertainty. Springer Science & Business Media, 1992.
+Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+dynamics and uncertainty. Springer Science & Business Media, 1992.
 
-Bonfil, R. (2005) ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil, Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
+Bonfil, R. (2005) ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil,
+Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
 }

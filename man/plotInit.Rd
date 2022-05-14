@@ -22,7 +22,8 @@ plotInit(df.onewaytrip)
 
 }
 \references{
-Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice, dynamics and uncertainty. Springer Science & Business Media, 1992.
+Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+dynamics and uncertainty. Springer Science & Business Media, 1992.
 
 Magnusson, Arni, and Ray Hilborn. "What makes fisheries data informative?." Fish and Fisheries 8, no. 4 (2007): 337-358.
 }

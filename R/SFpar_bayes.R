@@ -1,16 +1,22 @@
 #' @title Schaefer and Fox' parameter estimation using bayesian
 #'
 #' @description
-#' Function to estimate the Schaefer and Fox' parameter using bayesian approach. This approach requires r from the assessed species as input prior in the bayesian,
+#' Function to estimate the Schaefer and Fox' parameter using bayesian approach.
+#' This approach requires r from the assessed species as input prior in the bayesian,
 #' to increase the accuracy of surplus production parameter estimation in Schaefer and Fox model.
 #'
-#' This function requires JABBA package installed.
+#' This function requires JABBA package installed. By default, the Markov Chain Monte Carlo (MCMC) method
+#' is used to create a desired sample required in the bayesian analysis.
 #'
 #' @param df dataframe containing three columns; year, catch and effort
 #' @param K.prior carrying capacity (K) parameter prior. The default is NULL, can also receive input (mu, cv)
 #' @param psi.prior ratio between B0/K parameter prior. The default is (0.9, 0.25), can also receive input (mu, cv)
 #' @param r.prior intrinsic growth rate (r) parameter prior. The default is (mu, cv) with mu from rGrabber median parameter and cv is set at 0.5
 #' @param SPmodel option on Surplus Production model; 1 for Schaefer and 2 for Fox
+#' @param ni number of iterations used in the MCMC process. The default is 30000
+#' @param nt thinning interval of saved iterations. The default is 5
+#' @param nb number of iterations to discard (burn-in) in the initial MCMC process. The default is 5000
+#' @param nc number of MCMC chains initial values. The default is 2
 #'
 #' @return
 #' @export
@@ -20,13 +26,14 @@
 #'
 #' @examples
 #' # grab r intrinsic growth parameter and use it for the next analysis
+#' library("rfishbase")
 #' r.val <- rGrabber("Hoplostethus atlanticus")
 #'
 #' library("JABBA")
 #' SFpar_bayes(df=df.eastpacCatch, K.prior, psi.prior, r.prior=r.val, SPmodel=1)
 #'
 
-SFpar_bayes <- function(df, K.prior=NULL, psi.prior=c(0.9, 0.25), r.prior, SPmodel){
+SFpar_bayes <- function(df, K.prior=NULL, psi.prior=c(0.9, 0.25), r.prior, SPmodel, ni=30000, nt=5, nb=5000, nc=2){
   catch <- df[,c(1,2)]
   cpue <- data.frame(year=df[,1],cpue=df[,2]/df[,3])
   K.prior <- K.prior
@@ -41,7 +48,7 @@ SFpar_bayes <- function(df, K.prior=NULL, psi.prior=c(0.9, 0.25), r.prior, SPmod
                          psi.dist = c("lnorm", "range"), psi.prior = psi.prior,
                          r.dist = c("lnorm", "range"), r.prior=c(r.mean, 0.5), # sd is estimated at 0.5 since there is no way to calculate this value from provided mean and 95% CI
                          model.type = type)
-  res.bayes <- fit_jabba(jbinput, init.r=r.mean, quickmcmc=TRUE)
+  res.bayes <- fit_jabba(jbinput, ni=30000, nt=5, nb=5000, nc=2, init.r=r.mean, quickmcmc=TRUE)
   res <- data.frame(K=res.bayes[["pars"]]$Median[1],
                     B0=res.bayes[["pars"]]$Median[4]*res.bayes[["pars"]]$Median[1],
                     r=res.bayes[["pars"]]$Median[2],

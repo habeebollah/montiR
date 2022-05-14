@@ -7,24 +7,36 @@
 FparRP_min(inpars, df, OWT = FALSE, Frate = 0.7, weight = 100)
 }
 \arguments{
-\item{inpars}{reference point parameters which consist of Bmsy (stock biomass at maximum sustainable yield), MSY (maximum sustainable yield), Emsy (effort at maximum sustainable yield), and B0 (biomass when fishing is started).}
+\item{inpars}{reference point parameters which consist of Bmsy (stock biomass at maximum
+sustainable yield), MSY (maximum sustainable yield), Emsy (effort at maximum sustainable yield), and B0 (biomass when fishing is started).}
 
 \item{df}{dataframe containing three columns; year, catch and effort}
 
-\item{OWT}{is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be replaced with TRUE when the plot shows One Way Trip}
+\item{OWT}{is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
+replaced with TRUE when the plot shows One Way Trip}
 
 \item{Frate}{exploitation rate collected from other survey. The default is 0.7}
 
-\item{weight}{weight given to the deviation between observed and predicted value in exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result}
+\item{weight}{weight given to the deviation between observed and predicted value in
+exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result}
 }
 \value{
-
+input for inpars are  kept at initial value without using log() like the other minimization inputs. If
+the fitted parameters resulting in minus value, use the constrained variables and "L-BFGS-B" optimization method,
+and produce the standard error from hessian using steps in https://stackoverflow.com/questions/27202395/how-do-i-get-standard-errors-of-maximum-likelihood-estimates-in-stan
 }
 \description{
-Function used in the maximum likelihood minimization to estimate Fox's reference points using lognormal distribution. The use of lognormal in maximum likelihood is important to remove potential error during data collection  (Polacheck et al., 1993).
-Since fishing effort data collection are not always conducted regularly while catch is likely have a better time series information, this function also allow for some lose of data.
+Function used in the maximum likelihood minimization to estimate Fox' reference points
+using lognormal distribution. The use of lognormal in maximum likelihood is important
+since the index of abundance is assumed to follow lognormal distribution and
+all the observation errors is the result of the relationships between stock biomass and index of
+abundance which requires to be estimated (Polacheck et al., 1993).
 
-This function also consider the different quality data, for instance if the data shows a one way trip pattern which losing increasing rate of increase.
+Since fishing effort data collection are not always conducted regularly while catch is likely
+have a better time series information, this function also allow for some lose of data.
+
+This function also consider the different quality data, for instance if the data shows
+a one way trip pattern which losing increasing rate of increase.
 
 A continuation step in the following example section can help to estimate the standard error in the reference points value
 }
@@ -39,28 +51,31 @@ MSY <- (r*K)/(exp(1)*log(K))
 Emsy <- r/q
 
 ### Estimate parameters using optim
-startPars <- c(log(Bmsy), log(MSY), log(Emsy), log(B0), log(0.1))
+inpars <- c(Bmsy, MSY, Emsy, B0, 0.1)
 
-fit <- optim(par=startPars,
+fit <- optim(par=inpars,
              fn=FparRP_min,
              df=df.goodcontrast,
              method="Nelder-Mead",
              OWT=FALSE, Frate = 0.7, weight = 100,
              hessian=TRUE)
 
-fitted_pars <- exp(fit$par)
+fitted_pars <- fit$par
 
 FparRP_vals <- data.frame(RPpar = c("Bmsy", "MSY", "Emsy", "B0", "sigma"),
                          init_pars = c(Bmsy, MSY, Emsy, B0, 0.1),
                          fitted_pars = fitted_pars,
-                         std_err = sqrt(abs(diag(solve(-fit$hessian))))) # need to check whether the the hessian should be back transformed using exp
+                         std_err = sqrt(abs(diag(solve(-fit$hessian)))))
 
 
 }
 \references{
-Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice, dynamics and uncertainty. Springer Science & Business Media, 1992.
+Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+dynamics and uncertainty. Springer Science & Business Media, 1992.
 
-Bonfil, R. 2005. ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil, Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
+Bonfil, R. 2005. ‘Fishery stock assessment models and their application to sharks’, in Musick, J. A. and Bonfil,
+Ramon (eds) Wildlife Conservation. Rome: Food and Agriculture Organizations of The United Nations, pp. 154–181.
 
-Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models: Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
+Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models:
+Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
 }
