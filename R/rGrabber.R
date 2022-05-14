@@ -4,6 +4,9 @@
 #' Function to download intrinsic growth rate (r) parameter for specific species from Fishbase
 #' and SeaLifebase. The r growth parameter will serve as prior in the bayesian analysis in the surplus production model.
 #'
+#' The r value is ranging from 0 to 1, where high r value represents the r strategist species and
+#' known to have more resilient characteristics when facing with fishing pressures (Adams, 1980; Kawasaki, 1980, 1983).
+#'
 #' This function requires rfishpackage installed and internet connection.
 #'
 #' @param SciName insert scientific name for the fish or aquatic biota
@@ -12,6 +15,15 @@
 #' @export
 #'
 #' @references
+#' Adams, P. (1980) ‘Life history patterns in marine fishes and their consequences for fisheries management’,
+#' Fishery Bulletin, 78(1), pp. 1–12.
+#'
+#' Kawasaki, T. (1980) ‘Fundamental Relations among the Selections of Life History in the Marine Teleosts’,
+#' Bulletin of the Japanese Society of Scientific Fisheriess, 463(3), pp. 289–293.
+#'
+#' Kawasaki, T. (1983) Why do some pelagic fishes have wide fluctuations in their numbers? Biological basis of
+#' fluctuation from the viewpoint of evolutionary ecology, FAO Fisheries Report (FAO).
+#'
 #' https://www.fishbase.in/manual/key%20facts.htm
 #'
 #' @examples
