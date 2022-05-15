@@ -41,33 +41,16 @@ Fungsi-fungsi yang digunakan di montiR dibangun dengan struktur sesuai dengan ga
 
 ## Installation
 
-Anda dapat mengunduh dan menginstal package ini melalui link berikut:
+Anda dapat mengunduh dan menginstal package ini dengan mengetikkan kode ini pada konsole di Rstudio:
 
 ``` r
 devtools::install_github("habeebollah/montiR")
 ```
 
-## Contoh
+## Panduan penggunaan
 
-Berikut adalah contoh sederhana penggunaan montiR
+Panduan penggunaan package ini dapat dilihat pada link berikut:
 
-```{r example}
-library(montiR)
-## membuat input data
-df <- data.frame(tahun=c(...),
-                 tangkapan=c(...),
-                 upaya=c(...))
-                 
-## melihat bentuk data
-plotInit(df=df)
-
-## mencari pilihan parameter awal sebagai input untuk estimasi
-K <- 1000
-B0 <- K
-r <- 0.3
-q <- 0.00025
-
-inpars <- c(log(K), log(B0), log(r), log(q))
-SPparS(inpars=inpars, df=goodcontrast)
+``` r
+https://habeebollah.github.io/
 ```
-
