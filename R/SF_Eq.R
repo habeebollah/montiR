@@ -65,12 +65,9 @@ SF_Eq <- function(df){
   # Catch[i]/effort[i] = q*B = exp(a+b*effort[i]) when f=0 reaches virgin biomass, hence
   # VirginBiomass.f <- exp(a.intercept.f)/q
 
-  res <- list(data=cbind(df, CPUE.s, CPUE.f),
-              result=data.frame(analysis=c("MSY", "MSY.CIlow", "MSY.CIupp", "Emsy", "Emsy.CIlow", "Emsy.CIupp", "r2", "adj.r2"),
-                                Schaefer=c(MSY.s, MSY.s_CI[1], MSY.s_CI[2], Emsy.s, Emsy.s_CI[1], Emsy.s_CI[2], summary(LReg.s)$r.squared, summary(LReg.s)$adj.r.squared),
-                                Fox=c(MSY.f, MSY.f_CI[1], MSY.f_CI[2], Emsy.f, Emsy.f_CI[1], Emsy.f_CI[2], summary(LReg.f)$r.squared, summary(LReg.f)$adj.r.squared)
-              )
-  )
+  res <- data.frame(analysis=c("MSY", "MSY.CIlow", "MSY.CIupp", "Emsy", "Emsy.CIlow", "Emsy.CIupp", "r2", "adj.r2"),
+                    Schaefer=c(MSY.s, MSY.s_CI[1], MSY.s_CI[2], Emsy.s, Emsy.s_CI[1], Emsy.s_CI[2], summary(LReg.s)$r.squared, summary(LReg.s)$adj.r.squared),
+                    Fox=c(MSY.f, MSY.f_CI[1], MSY.f_CI[2], Emsy.f, Emsy.f_CI[1], Emsy.f_CI[2], summary(LReg.f)$r.squared, summary(LReg.f)$adj.r.squared))
   return(res)
 }
 

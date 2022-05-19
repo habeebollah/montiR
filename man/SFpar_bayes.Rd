@@ -40,8 +40,8 @@ SFpar_bayes(
 }
 \description{
 Function to estimate the Schaefer and Fox' parameter using bayesian approach.
-This approach requires r from the assessed species as input prior in the bayesian,
-to increase the accuracy of surplus production parameter estimation in Schaefer and Fox model.
+This approach requires r from the assessed species as input prior in the bayesian, which in theory would increase
+the accuracy of surplus production parameter and reference points estimation in Schaefer and Fox model.
 
 The r value is ranging from 0 to 1, where high r value represents the r strategist species and
 known to have more resilient characteristics when facing with fishing pressures (Adams, 1980; Kawasaki, 1980, 1983).
@@ -55,7 +55,7 @@ library("rfishbase")
 r.val <- rGrabber("Hoplostethus atlanticus")
 
 library("JABBA")
-SFpar_bayes(df=df.eastpacCatch, K.prior, psi.prior, r.prior=r.val, SPmodel=1)
+SFpar_bayes(df=df.eastpacCatch, r.prior=r.val, SPmodel=1)
 
 }
 \references{
