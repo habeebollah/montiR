@@ -21,7 +21,7 @@
 #' to be more conservative or set higher to increase more catch.
 #' For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy,
 #' 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2
-#' (or other value higher than 1) and return 1.5Bmsy, 1.5MSY, and 1.5Emsy.
+#' (or other value higher than 1) and return (1*1.2)Bmsy, 1.2MSY, and 1.2Emsy.
 #'
 #' @export
 #'
@@ -40,6 +40,9 @@
 #' legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
 #'
 #'
+
+# The TAC*Bmsy need to have further scrutiny
+
 Sproj <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
   K <- inpars[1]
   B0 <- inpars[2]
