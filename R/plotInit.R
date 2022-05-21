@@ -23,18 +23,26 @@
 #'
 plotInit <- function(df){
   I <- df[,2]/df[,3]
+  lmI <- lm(I ~ df[,1])
   I2 <- seq(min(I), max(I), length=100)
   nline <- dnorm(I2, mean(I), sd(I))
   lnline <- dlnorm(I2, mean(log(I)), sd(log(I)))
 
   par(mfrow=c(2,2), mar=c(3,4,1,2))
   plot(x=df[,1], y=df[,2], type="l", ylab="Catch")
+
   plot(x=df[,1], y=df[,3], type="l", ylab="Effort")
-  plot(x=df[,1], y=df[,2]/df[,3], type="l", ylab="CPUE")
+
+  #plot(x=df[,1], y=I, type="l", ylab="CPUE")
+  plot(I ~ df[,1], type="l", ylab="CPUE", col="black")
+  abline(lmI$coefficients[1], b=lmI$coefficients[2], lty=1, col="red")
+  legend("topright", c("This data", "One-way trip"), bty = "n",
+         cex=0.8, col = c("black", "red"), lwd = c(1, 1))
+
   hist(I, prob=T, freq=F, main=NULL)
   lines(density(I), col="black")
   lines(I2, nline, col="red")
   lines(I2, lnline, col="blue")
   legend("topright", c("This data", "Normal", "LogNormal"), bty = "n",
-         cex=0.8, col = c("black", "red", "blue"), lwd = c(1, 2, 2))
+         cex=0.8, col = c("black", "red", "blue"), lwd = c(1, 1, 1))
 }
