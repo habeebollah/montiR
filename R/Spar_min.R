@@ -20,7 +20,8 @@
 #' replaced with TRUE when the plot shows One Way Trip
 #' @param Frate exploitation rate collected from other survey. The default is 0.7
 #' @param weight weight given to the deviation between observed and predicted value in
-#' exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result
+#' exploitation rate. The default is set at 0.5 with range between 0-1 (lower accuracy with high variance as closer to 0,
+#' constrain the estimation procedure to fit the auxiliary information as closer to 1)
 #'
 #' @return
 #' @export
@@ -51,7 +52,7 @@
 #'                          init_pars = c(K, B0, r, q, 0.1),
 #'                          fitted_pars = exp(fit$par))
 #'
-Spar_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 100){
+Spar_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 0.5){
   K <- exp(inpars[1])
   B0 <- exp(inpars[2])
   r <- exp(inpars[3])

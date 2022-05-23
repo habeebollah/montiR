@@ -22,7 +22,8 @@
 #' replaced with TRUE when the plot shows One Way Trip
 #' @param Frate exploitation rate collected from other survey. The default is 0.7
 #' @param weight weight given to the deviation between observed and predicted value in
-#' exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result
+#' exploitation rate. The default is set at 0.5 with range between 0-1 (lower accuracy with high variance as closer to 0,
+#' constrain the estimation procedure to fit the auxiliary information as closer to 1)
 #'
 #' @return input for inpars are  kept at initial value without using log() like the other minimization inputs. If
 #' the fitted parameters resulting in minus value, use the constrained variables and "L-BFGS-B" optimization method,
@@ -57,7 +58,7 @@
 #'              fn=FparRP_min,
 #'              df=df.goodcontrast,
 #'              method="Nelder-Mead",
-#'              OWT=FALSE, Frate = 0.7, weight = 100,
+#'              OWT=FALSE, Frate = 0.7, weight = 0.5,
 #'              hessian=TRUE)
 #'
 #' fitted_pars <- fit$par
@@ -69,7 +70,7 @@
 #'                          std_err = sqrt(abs(diag(solve(-fit$hessian)))))
 #'
 #'
-FparRP_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 100){
+FparRP_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 0.5){
   Bmsy <- inpars[1]
   MSY <- inpars[2]
   Emsy <- inpars[3]
