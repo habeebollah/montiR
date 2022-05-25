@@ -30,7 +30,7 @@ df.creator <- function(K, B0, r, q, nYears, effort){
   return(res)
 }
 
-df.creator(K=1000, B0=1000, r=0.2, q=0.00025, nYears=20, effort=effort.owt)
+df.goodcontrast <- df.creator(K=1000, B0=1000, r=0.2, q=0.00025, nYears=20, effort=effort.gc)
 
 # create list of data
 nsims <- 500
@@ -168,4 +168,22 @@ lines(x=1:50, y=rowMeans(yval_emsyproj.gc.base), col="blue", lwd=2) # mean value
 lines(x=1:50, y=t(apply(yval_emsyproj.gc.base,1,quantile,c(0.025,0.975)))[,1], lty=2, col="blue", lwd=2) # lower confident interval
 lines(x=1:50, y=t(apply(yval_emsyproj.gc.base,1,quantile,c(0.025,0.975)))[,2], lty=2, col="blue", lwd=2) # upper confident interval
 
+## need to be added to the minimization with normal distribution version
+#' @param dt type of data distribution in the abundance index. The default is "log-normal",
+#' and can be replaced with "normal" when the abundance index show a closer pattern to normal distribution.
+#'
+#' dt=c("log-normal", "normal")
+#'
+if (OWT==FALSE){
+ifelse(dt=="log-normal", nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)),
+       ifelse(dt=="normal", nll <- -sum(dnorm(x= na.omit(CPUE), mean = na.omit(EstCPUE), sd = sigma, log = TRUE)),
+              nll <- "wrong dt code!"))
+}
+else{
+  ifelse(dt=="log-normal", nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+           weight * (tail(annualFrates,1) - Frate)^2,
+         ifelse(dt=="normal", nll <- -sum(dnorm(x= na.omit(CPUE), mean = na.omit(EstCPUE), sd = sigma, log = TRUE)) +
+                  weight * (tail(annualFrates,1) - Frate)^2,
+                nll <- "wrong dt code!"))
+}
 
