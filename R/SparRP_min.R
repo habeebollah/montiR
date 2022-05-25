@@ -1,11 +1,9 @@
 #' @title Schaefer's reference points minimizing function
 #'
 #' @description
-#' Function used in the maximum likelihood minimization to estimate Schaefer's reference points
-#' using lognormal distribution. The use of lognormal in maximum likelihood is important
-#' since the index of abundance is assumed to follow lognormal distribution and
-#' all the observation errors is the result of the relationships between stock biomass and index of
-#' abundance which requires to be estimated (Polacheck et al., 1993).
+#' Function used in the maximum likelihood minimization to estimate Schaefer's reference points.
+#' Observation error is assumed to occur in the relationship between stock biomass and index of abundance,
+#' therefore it is estimated assuming lognormal distribution in maximum likelihood (Polacheck et al., 1993).
 #'
 #' Since fishing effort data collection are not always conducted regularly while catch is likely
 #' have a better time series information, this function also allow for some lose of data.
@@ -99,5 +97,6 @@ SparRP_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 0.5){
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
       weight * (tail(annualFrates,1) - Frate)^2
   }
+
   return(nll)
 }

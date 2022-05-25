@@ -4,7 +4,7 @@
 \alias{SparRP_min}
 \title{Schaefer's reference points minimizing function}
 \usage{
-SparRP_min(inpars, df, OWT = FALSE, Frate = 0.7, weight = 100)
+SparRP_min(inpars, df, OWT = FALSE, Frate = 0.7, weight = 0.5)
 }
 \arguments{
 \item{inpars}{reference point parameters which consist of Bmsy (stock biomass at maximum
@@ -18,7 +18,8 @@ replaced with TRUE when the plot shows One Way Trip}
 \item{Frate}{exploitation rate collected from other survey. The default is 0.7}
 
 \item{weight}{weight given to the deviation between observed and predicted value in
-exploitation rate. The default is set at 100 and can be adjusted to create a more make sense result}
+exploitation rate. The default is set at 0.5 with range between 0-1 (lower accuracy with high variance as closer to 0,
+constrain the estimation procedure to fit the auxiliary information as closer to 1)}
 }
 \value{
 input for inpars are  kept at initial value without using log() like the other minimization inputs. If
@@ -26,11 +27,9 @@ the fitted parameters resulting in minus value, use the constrained variables an
 and produce the standard error from hessian using steps in https://stackoverflow.com/questions/27202395/how-do-i-get-standard-errors-of-maximum-likelihood-estimates-in-stan
 }
 \description{
-Function used in the maximum likelihood minimization to estimate Schaefer's reference points
-using lognormal distribution. The use of lognormal in maximum likelihood is important
-since the index of abundance is assumed to follow lognormal distribution and
-all the observation errors is the result of the relationships between stock biomass and index of
-abundance which requires to be estimated (Polacheck et al., 1993).
+Function used in the maximum likelihood minimization to estimate Schaefer's reference points.
+Observation error is assumed to occur in the relationship between stock biomass and index of abundance,
+therefore it is estimated assuming lognormal distribution in maximum likelihood (Polacheck et al., 1993).
 
 Since fishing effort data collection are not always conducted regularly while catch is likely
 have a better time series information, this function also allow for some lose of data.
@@ -57,7 +56,7 @@ fit <- optim(par=inpars,
              fn=SparRP_min,
              df=df.goodcontrast,
              method="Nelder-Mead",
-             OWT=FALSE, Frate = 0.7, weight = 100,
+             OWT=FALSE, Frate = 0.7, weight = 0.5,
              hessian=TRUE)
 
 fitted_pars <- fit$par
