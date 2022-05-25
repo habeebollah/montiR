@@ -15,6 +15,7 @@ plotInit(df)
 \description{
 This function plot the catch, effort and CPUE from a dataframe to check,
 whether the plot shows one-way trip pattern or show a good contrast as required for the biomass dynamic model.
+It also produces histogram of the CPUE.
 }
 \examples{
 plotInit(df.goodcontrast)
