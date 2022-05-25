@@ -27,7 +27,7 @@ The TAC is set at 1 in default. It would depend on the fishery to set whether th
 to be more conservative or set higher to increase more catch.
 For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy,
 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2
-(or other value higher than 1) and return 1.5Bmsy, 1.5MSY, and 1.5Emsy.
+(or other value higher than 1) and return (1*1.2)Bmsy, 1.2MSY, and 1.2Emsy.
 }
 \description{
 Function to create projection in Schaefer's model based on different reference points (Bmsy, MSY, Emsy) and
