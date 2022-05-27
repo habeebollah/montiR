@@ -16,10 +16,13 @@
 #' @param df dataframe containing three columns; year, catch and effort
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
 #' replaced with TRUE when the plot shows One Way Trip
-#' @param Frate exploitation rate collected from other survey. The default is 0.7
-#' @param weight weight given to the deviation between observed and predicted value in
-#' exploitation rate. The default is set at 0.5 with range between 0-1 (lower accuracy with high variance as closer to 0,
-#' constrain the estimation procedure to fit the auxiliary information as closer to 1)
+#' @param currentF Current exploitation rate collected from other survey. The default is 0.7 to say that almost all fish are caught
+#' @param currentB Current level of biomass. Collected from survey
+#' @param weight weight given to the deviation between observed and predicted value in either
+#' exploitation rate or biomass level. The default weight for exploitation rate is set at 1, and can be increased to reach the
+#' value closest to the current exploitation rate. The default weight for biomass level is set at 0.5 with range
+#' between 0-1 (lower accuracy with high variance as closer to 0, constrain the estimation procedure to fit the auxiliary
+#' information as closer to 1)
 #'
 #' @return
 #' @export
