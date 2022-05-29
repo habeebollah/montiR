@@ -15,9 +15,9 @@
 #' (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
 #' @param df dataframe containing three columns; year, catch and effort
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
-#' replaced with TRUE when the plot shows One Way Trip
+#' replaced with either "Depletion" or "Biomass" when the plot shows One Way Trip where depletion or biomass
+#' is used to complement the lacking contrast information from index of abundance (CPUE)
 #' @param currentF Current exploitation rate collected from other survey. The default is 0.7 to say that almost all fish are caught
-#' @param currentB Current level of biomass. Collected from survey
 #' @param weight weight given to the deviation between observed and predicted value in either
 #' exploitation rate or biomass level. The default weight for exploitation rate is set at 1, and can be increased to reach the
 #' value closest to the current exploitation rate. The default weight for biomass level is set at 0.5 with range
@@ -25,6 +25,9 @@
 #' information as closer to 1)
 #'
 #' @return
+#' Using biomass as auxiliary information to complement the one way trip data requires time series data. This
+#' information should be added as the fourth columns in the input dataframe.
+#'
 #' @export
 #'
 #' @references
@@ -47,13 +50,13 @@
 #'              fn=Spar_min,
 #'              df=df.goodcontrast,
 #'              method="Nelder-Mead",
-#'              OWT=FALSE, Frate = 0.7, weight = 0.5)
+#'              OWT=FALSE, currentF = 0.7, weight = 0.5)
 #'
 #' Spar_vals <- data.frame(SPpar = c("K", "B0", "r", "q", "sigma"),
 #'                          init_pars = c(K, B0, r, q, 0.1),
 #'                          fitted_pars = exp(fit$par))
 #'
-Spar_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 0.5){
+Spar_min1 <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
   K <- exp(inpars[1])
   B0 <- exp(inpars[2])
   r <- exp(inpars[3])
@@ -70,16 +73,26 @@ Spar_min <- function(inpars, df, OWT=FALSE, Frate = 0.7, weight = 0.5){
     )
     )
   }
-  EstCPUE <-  EstBt * q
-  annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
+  EstCPUE <-  EstBt * q # check Punt & Hilborn (1996) p 17 & 29
 
   if (OWT==FALSE){
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE))
     }
-  else{
+
+  if (OWT=="Depletion"){
+    annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
-      weight * (tail(annualFrates,1) - Frate)^2
-    }
+      weight * (tail(annualFrates,1) - currentF)^2
+    print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
+  }
+
+  if (OWT=="Biomass"){ # haven't been checked yet
+    surveyB <- df[,4]
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+      -sum(weight * (surveyB - EstBt)^2)
+  }
 
   return(nll)
 }
+
+# the trajectory and stochastic can be found in Punt & Hilborn (1996) p 44
