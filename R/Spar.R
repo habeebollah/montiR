@@ -24,7 +24,7 @@
 #' r <- 0.2
 #' q <- 0.00025
 #'
-#' inpars <- c(log(K), log(B0), log(r), log(q))
+#' inpars <- c(K, B0, r, q)
 #' Spar(inpars=inpars, df=df.goodcontrast)
 #'
 Spar <- function(inpars, df){
