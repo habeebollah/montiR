@@ -25,9 +25,9 @@
 #' q <- 0.00025
 #'
 #' inpars <- c(K, B0, r, q)
-#' Spar(inpars=inpars, df=df.goodcontrast)
+#' Par_init(inpars=inpars, df=df.goodcontrast)
 #'
-Spar <- function(inpars, df){
+Par_init <- function(inpars, df){
   K <- inpars[1]
   B0 <- inpars[2]
   r <- inpars[3]
