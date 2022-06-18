@@ -46,7 +46,7 @@ Par_init <- function(inpars, df){
 
   plot(CPUE, xlab="Year", ylab="CPUE", type="b", col="blue")
   lines(EstCPUE, type="b", col="red")
-  legend("topright", legend=c("Observation", "Estimation"), lty=c(1, 1), col=c("blue", "red"), box.lty=1, cex=0.7)
+  legend("topright", legend=c("Observation", "Estimation"), lty=c(1, 1), col=c("blue", "red"), box.lty=1, cex=0.7, bty="n")
 
   return(data.frame(CPUE=CPUE, EstBt=EstBt, EstCatch=EstCatch, EstCPUE=EstCPUE))
 }
