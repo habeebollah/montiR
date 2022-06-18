@@ -1,4 +1,4 @@
-#' @title pelagic longine fishery data
+#' @title pelagic longline fishery data
 #'
 #' @description A data set containing year, catch and effort from longline to catch pelagic fish in eastern pacific sea (Schaefer, 1957).
 #'
