@@ -5,7 +5,7 @@
 rm(list=ls())
 
 
-#devtools::install_github("habeebollah/montiR")
+devtools::install_github("habeebollah/montiR")
 library(montiR)
 
 # set surplus production parameters
@@ -22,30 +22,30 @@ inpars <- c(log(K), log(B0), log(r), log(q), log(sigma))
 repsims <- function(nYears, nsims){
 
   for (year in 1:length(nYears)){
-    nYears=nYears[year]
+    #nYears=nYears[year]
 
-    B <- CPUE <- C <- rep(NA, nYears)
-    effort.gc <- c(seq(1,500, length.out = nYears/2), rev(seq(1,500, length.out = nYears / 2))) # good contrast
-    effort.owt <- seq(1,500, length.out = nYears) # one way trip
+    B <- CPUE <- C <- rep(NA, nYears[year])
+    effort.gc <- c(seq(1,500, length.out = nYears[year]/2), rev(seq(1,500, length.out = nYears[year]/2))) # good contrast
+    effort.owt <- seq(1,500, length.out = nYears[year]) # one way trip
 
     dat.gc <- replicate(n=nsims,
-                        expr={for (i in 1:nYears) {
+                        expr={for (i in 1:nYears[year]) {
                           if (i == 1) B[i] <- B0
                           if (i>1) B[i] <- B[i-1] + rlnorm(1, meanlog = -procError^2/2, sdlog = procError) * B[i-1] * r * (1 - B[i-1]/K) - C[i-1]
                           C[i] <- q * effort.gc[i] * B[i] * rlnorm(1, meanlog = -catchError^2/2, sdlog = catchError)
                           CPUE[i] <- C[i] / effort.gc[i]
                         }
-                          data.frame(year=1:nYears, catch = C, effort = effort.gc, CPUE = CPUE)},
+                          data.frame(year=1:nYears[year], catch = C, effort = effort.gc, CPUE = CPUE)},
                         simplify=F)
 
     dat.owt <- replicate(n=nsims,
-                         expr={for (i in 1:nYears) {
+                         expr={for (i in 1:nYears[year]) {
                            if (i == 1) B[i] <- B0
                            if (i>1) B[i] <- B[i-1] + rlnorm(1, meanlog = -procError^2/2, sdlog = procError) * B[i-1] * r * (1 - B[i-1]/K) - C[i-1]
                            C[i] <- q * effort.owt[i] * B[i] * rlnorm(1, meanlog = -catchError^2/2, sdlog = catchError)
                            CPUE[i] <- C[i] / effort.owt[i]
                          }
-                           data.frame(year=1:nYears, catch = C, effort = effort.owt, CPUE = CPUE)},
+                           data.frame(year=1:nYears[year], catch = C, effort = effort.owt, CPUE = CPUE)},
                          simplify=F)
 
     #par(mfrow=c(1,2))
