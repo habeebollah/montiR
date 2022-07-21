@@ -270,7 +270,7 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
     annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
       weight * (tail(annualFrates,1) - currentF)^2
-    print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
+    #print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
   }
 
   if (OWT=="Biomass"){ # haven't been checked yet
