@@ -56,13 +56,13 @@ repsims <- function(nsims=1, nYears){
                            data.frame(year=1:nYears, catch = C, effort = effort.owt, CPUE = CPUE)},
                          simplify=F)
 
-    par(mfrow=c(3,1))
-    plot(dat.gc[[1]]$CPUE, type='l', ylab="CPUE", xlab="Year", col="grey", main=paste('good-contrast data |', nsims, "sims"))
-    for(sims in 2:nsims) lines(dat.gc[[sims]]$CPUE, type='l', col='grey')
-    plot(dat.f[[1]]$CPUE, type='l', ylab="CPUE", xlab="Year", col="grey", main=paste('flat data |', nsims, "sims"))
-    for(sims in 2:nsims) lines(dat.f[[sims]]$CPUE, type='l', col='grey')
-    plot(dat.owt[[1]]$CPUE, type='l', ylab="CPUE", xlab="Year", col="grey", main=paste('one-way-trip data |', nsims, "sims"))
-    for(sims in 2:nsims) lines(dat.owt[[sims]]$CPUE, type='l', col='grey')
+    #par(mfrow=c(3,1))
+    #plot(dat.gc[[1]]$CPUE, type='l', ylab="CPUE", xlab="Year", col="grey", main=paste('good-contrast data |', nsims, "sims"))
+    #for(sims in 2:nsims) lines(dat.gc[[sims]]$CPUE, type='l', col='grey')
+    #plot(dat.f[[1]]$CPUE, type='l', ylab="CPUE", xlab="Year", col="grey", main=paste('flat data |', nsims, "sims"))
+    #for(sims in 2:nsims) lines(dat.f[[sims]]$CPUE, type='l', col='grey')
+    #plot(dat.owt[[1]]$CPUE, type='l', ylab="CPUE", xlab="Year", col="grey", main=paste('one-way-trip data |', nsims, "sims"))
+    #for(sims in 2:nsims) lines(dat.owt[[sims]]$CPUE, type='l', col='grey')
 
     ### Estimate parameters using optim
     res.owtpl <- res.owtnpl <- res.fpl <- res.fnpl <- res.gc <- data.frame(matrix(NA, nrow=nsims, ncol=5))
@@ -97,9 +97,9 @@ repsims <- function(nsims=1, nYears){
     return(res)
 }
 
-nsims=10
-nYears=10
-df10 <- repsims(nsims=nsims, nYears=nYears)
+nsims=2000
+nYears=30
+df30 <- repsims(nsims=nsims, nYears=nYears)
 
 df10
 df20
@@ -123,10 +123,11 @@ write.csv(sims2000_02, 'sims2000_02.csv')
 library(ggplot2)
 library(tidyr)
 
-dat_all[,-c(1:5)] %>%
+dat_all[,-c(1:5,7)] %>%
   pivot_longer(-c(tipe,ndata),'parameter','value') %>%
   ggplot(aes(ndata, value)) + geom_violin() +
   facet_wrap(tipe~parameter, scales = 'free_y', nrow=5) +
+  coord_cartesian(ylim = c(0, 250)) + # remove this line to get the free_y function works
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
