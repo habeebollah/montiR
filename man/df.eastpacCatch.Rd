@@ -3,7 +3,7 @@
 \docType{data}
 \name{df.eastpacCatch}
 \alias{df.eastpacCatch}
-\title{pelagic longine fishery data}
+\title{pelagic longline fishery data}
 \format{
 A data frame with 21 rows and 3 variables:
 \describe{

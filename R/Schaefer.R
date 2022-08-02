@@ -25,9 +25,9 @@
 #' q <- 0.00025
 #'
 #' inpars <- c(K, B0, r, q)
-#' Spar(inpars=inpars, df=df.goodcontrast)
+#' Par_init(inpars=inpars, df=df.goodcontrast)
 #'
-Spar <- function(inpars, df){
+Par_init <- function(inpars, df){
   K <- inpars[1]
   B0 <- inpars[2]
   r <- inpars[3]
@@ -46,7 +46,7 @@ Spar <- function(inpars, df){
 
   plot(CPUE, xlab="Year", ylab="CPUE", type="b", col="blue")
   lines(EstCPUE, type="b", col="red")
-  legend("topright", legend=c("Observation", "Estimation"), lty=c(1, 1), col=c("blue", "red"), box.lty=1, cex=0.7)
+  legend("topright", legend=c("Observation", "Estimation"), lty=c(1, 1), col=c("blue", "red"), box.lty=1, cex=0.7, bty="n")
 
   return(data.frame(CPUE=CPUE, EstBt=EstBt, EstCatch=EstCatch, EstCPUE=EstCPUE))
 }
@@ -145,10 +145,10 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
     annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
       weight * (tail(annualFrates,1) - currentF)^2
-    print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
+    #print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
   }
 
-  if (OWT=="Biomass"){ # haven't been checked yet
+  if (OWT=="Biomass"){
     surveyB <- df[,4]
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
       -sum(weight * (surveyB - EstBt)^2)
@@ -270,7 +270,7 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
     annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
     nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
       weight * (tail(annualFrates,1) - currentF)^2
-    print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
+    #print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
   }
 
   if (OWT=="Biomass"){ # haven't been checked yet
@@ -304,9 +304,9 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #'
 #' The TAC is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower
 #' to be more conservative or set higher to increase more catch.
-#' For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy,
+#' For instance, when the TAC is set conservative at 0.8 of reference point, it will return
 #' 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2
-#' (or other value higher than 1) and return (1*1.2)Bmsy, 1.2MSY, and 1.2Emsy.
+#' (or other value higher than 1) and return 1.2MSY, and 1.2Emsy.
 #'
 #' @export
 #'
@@ -326,7 +326,6 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #'
 #'
 
-# The TAC*Bmsy need to have further scrutiny
 
 Sproj <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
   K <- inpars[1]
@@ -387,17 +386,17 @@ Sproj <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
   temp.Emsy <- data.frame(Year=Year, Catch=C.Emsy, Effort=E.Emsy, EstBt=head(EBt.Emsy,-1), B_B.Emsy=B_B.Emsy, F_F.Emsy=F_F.Emsy)
 
   # projection based on Bmsy measure
-  for (i in (nrow(df)+1):((nrow(df))+nyears)){
-    C.Bmsy[i] <- ifelse(TAC < 1, (1-TAC), TAC)*Bmsy
-    EBt.Bmsy[i+1] <- (EBt.msy[i]+EBt.Bmsy[i]*r*(1-(EBt.Bmsy[i]/K))-C.Bmsy[i])*rlnorm(n=1, meanlog=(-sigma^2/2), sdlog=sigma)  # stochastic
-    E.Bmsy[i] <- C.Bmsy[i]/(q*EBt.Bmsy[i])
-    F.Bmsy[i] <- C.Bmsy[i]/((EBt.Bmsy[i]+EBt.Bmsy[i+1])/2)
-  }
+#  for (i in (nrow(df)+1):((nrow(df))+nyears)){
+#    C.Bmsy[i] <- ifelse(TAC < 1, (1-TAC), TAC)*Bmsy
+#    EBt.Bmsy[i+1] <- (EBt.msy[i]+EBt.Bmsy[i]*r*(1-(EBt.Bmsy[i]/K))-C.Bmsy[i])*rlnorm(n=1, meanlog=(-sigma^2/2), sdlog=sigma)  # stochastic
+#    E.Bmsy[i] <- C.Bmsy[i]/(q*EBt.Bmsy[i])
+#    F.Bmsy[i] <- C.Bmsy[i]/((EBt.Bmsy[i]+EBt.Bmsy[i+1])/2)
+#  }
 
-  B_B.Bmsy <- head(EBt.Bmsy,-1)/Bmsy
-  F_F.Bmsy <- F.Bmsy/Fmsy
+#  B_B.Bmsy <- head(EBt.Bmsy,-1)/Bmsy
+#  F_F.Bmsy <- F.Bmsy/Fmsy
 
-  temp.Bmsy <- data.frame(Year=Year, Catch=C.Bmsy, Effort=E.Bmsy, EstBt=head(EBt.Bmsy,-1), B_B.Bmsy=B_B.Bmsy, F_F.Bmsy=F_F.Bmsy)
+#  temp.Bmsy <- data.frame(Year=Year, Catch=C.Bmsy, Effort=E.Bmsy, EstBt=head(EBt.Bmsy,-1), B_B.Bmsy=B_B.Bmsy, F_F.Bmsy=F_F.Bmsy)
 
   #res <- list(temp.MSY, temp.Emsy, temp.Bmsy)
   res <- list(temp.MSY, temp.Emsy)
