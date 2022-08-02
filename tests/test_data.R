@@ -106,7 +106,8 @@ repsims3 <- function(nsims=1, nYears){
   dat.gc <- replicate(n=nsims,
                       expr={for (i in 1:nYears) {
                         if (i == 1) B[i] <- B0
-                        if (i>1) B[i] <- B[i-1] + rlnorm(1, meanlog = -procError^2/2, sdlog = procError) * B[i-1] * r * (1 - B[i-1]/K) - C[i-1]
+                        #if (i>1) B[i] <- B[i-1] + rlnorm(1, meanlog = -procError^2/2, sdlog = procError) * B[i-1] * r * (1 - B[i-1]/K) - C[i-1]
+                        if (i>1) B[i] <- B[i-1] +  B[i-1] * r * (1 - B[i-1]/K) - C[i-1] # rlnorm(1, meanlog = -procError^2/2, sdlog = procError)
                         C[i] <- q * effort.gc[i] * B[i] * rlnorm(1, meanlog = -catchError^2/2, sdlog = catchError)
                         CPUE[i] <- C[i] / effort.gc[i]
                       }
@@ -116,7 +117,8 @@ repsims3 <- function(nsims=1, nYears){
   dat.owt <- replicate(n=nsims,
                        expr={for (i in 1:nYears) {
                          if (i == 1) B[i] <- B0
-                         if (i>1) B[i] <- B[i-1] + rlnorm(1, meanlog = -procError^2/2, sdlog = procError) * B[i-1] * r * (1 - B[i-1]/K) - C[i-1]
+                         #if (i>1) B[i] <- B[i-1] + rlnorm(1, meanlog = -procError^2/2, sdlog = procError) * B[i-1] * r * (1 - B[i-1]/K) - C[i-1]
+                         if (i>1) B[i] <- B[i-1] +  B[i-1] * r * (1 - B[i-1]/K) - C[i-1] # rlnorm(1, meanlog = -procError^2/2, sdlog = procError)
                          C[i] <- q * effort.owt[i] * B[i] * rlnorm(1, meanlog = -catchError^2/2, sdlog = catchError)
                          CPUE[i] <- C[i] / effort.owt[i]
                        }
@@ -157,7 +159,7 @@ repsims3 <- function(nsims=1, nYears){
   return(res)
 }
 
-nsims=10000
+nsims=2000
 
 # combine data in one dataframe
 dat_all <- cbind(rbind(repsims3(nsims=nsims, nYears=10),
@@ -166,7 +168,7 @@ dat_all <- cbind(rbind(repsims3(nsims=nsims, nYears=10),
                  ndata=rep(c('10', '20', '30'), each=nsims*3))
 
 head(dat_all)
-unique(dat_all$ndata)
+unique(dat_all$tipe)
 
 # conduct quick analysis
 library(dplyr)
@@ -179,15 +181,15 @@ write.csv(sims2000_02, 'sims2000_02.csv')
 library(ggplot2)
 library(tidyr)
 
-dat_all[,-c(1:5,7)] %>% # good contrast and one way trip data
+dat_all[,-c(1:5,7)] %>% filter(tipe=="good-contrast") %>% # good contrast and one way trip data
   pivot_longer(-c(tipe,ndata),'parameter','value') %>%
   ggplot(aes(ndata, value)) + geom_boxplot() +
-  facet_wrap(tipe~parameter, scales = 'free_y', nrow=5) +
-  coord_cartesian(ylim = c(0, 150)) + # remove this line to get the free_y function works
+  facet_wrap(tipe~parameter, scales = 'free_y', ncol=2) +
+  #coord_cartesian(ylim = c(0, 150)) + # remove this line to get the free_y function works
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
-  labs(x = "Number of annual time series data")
+  labs(x = "Jumlah data runtun waktu")
 
 dat_all[,-c(1:5,7)] %>% # good contrast, flat and one way trip data
   pivot_longer(-c(tipe,ndata),'parameter','value') %>%
