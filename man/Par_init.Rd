@@ -12,9 +12,6 @@ Par_init(inpars, df)
 
 \item{df}{dataframe containing three columns; year, catch and effort}
 }
-\value{
-
-}
 \description{
 This function is used to predict the initial Biomass Dynamic Model parameters as input to do
 the estimation in the latter process.

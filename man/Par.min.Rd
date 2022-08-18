@@ -9,7 +9,7 @@ Par.min(inpars, df, OWT = FALSE, currentF = 0.7, weight = 1000)
 \arguments{
 \item{inpars}{surplus production parameters which consist of K (carrying capacity), B0
 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient),
-sigma (observation error)}
+s.sigma (observation error)}
 
 \item{df}{dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
 if OWT (One Way Trip) option uses "Biomass"}
@@ -51,10 +51,10 @@ K <- 1000
 B0 <- K
 r <- 0.2
 q <- 0.00025
-sigma <- 0.1
+s.sigma <- 0.1
 
 ### Estimate parameters using optim
-inpars <- c(log(K), log(B0), log(r), log(q), log(sigma))
+inpars <- c(log(K), log(B0), log(r), log(q), log(s.sigma))
 
 fit <- optim(par=inpars,
              fn=Par.min,
@@ -62,8 +62,8 @@ fit <- optim(par=inpars,
              method="Nelder-Mead",
              OWT=FALSE, currentF = 0.7, weight = 0.5)
 
-Par.vals <- data.frame(SPpar = c("K", "B0", "r", "q", "sigma"),
-                         init_pars = c(K, B0, r, q, sigma),
+Par.vals <- data.frame(SPpar = c("K", "B0", "r", "q", "s.sigma"),
+                         init_pars = c(K, B0, r, q, s.sigma),
                          fitted_pars = exp(fit$par))
 
 }

@@ -3,7 +3,5 @@
 export(Par.min)
 export(ParRP_min)
 export(Par_init)
-export(SFpar_bayes)
 export(Sproj)
 export(plotInit)
-export(rGrabber)

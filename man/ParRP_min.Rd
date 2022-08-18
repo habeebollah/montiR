@@ -9,7 +9,7 @@ ParRP_min(inpars, df, OWT = FALSE, currentF = 0.7, weight = 0.5)
 \arguments{
 \item{inpars}{reference point parameters which consist of Bmsy (stock biomass at maximum
 sustainable yield), MSY (maximum sustainable yield), Emsy (effort at maximum sustainable yield), B0 (biomass when fishing is started)
-and sigma (observation error)}
+and s.sigma (observation error)}
 
 \item{df}{dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
 if OWT (One Way Trip) option uses "Biomass"}
@@ -57,14 +57,14 @@ K <- 1000
 B0 <- K
 r <- 0.2
 q <- 0.00025
-sigma <- 0.1
+s.sigma <- 0.1
 
 Bmsy <- K/2
 MSY <- (r*K)/4
 Emsy <- r/(2*q)
 
 ### Estimate parameters using optim
-inpars <- c(Bmsy, MSY, Emsy, B0, sigma)
+inpars <- c(Bmsy, MSY, Emsy, B0, s.sigma)
 
 fit <- optim(par=inpars,
              fn=ParRP_min,
@@ -76,7 +76,7 @@ fit <- optim(par=inpars,
 fitted_pars <- fit$par
 
 ### compile the result and calculate the standard error
-ParRP_vals <- data.frame(RPpar = c("Bmsy", "MSY", "Emsy", "B0", "sigma"),
+ParRP_vals <- data.frame(RPpar = c("Bmsy", "MSY", "Emsy", "B0", "s.sigma"),
                          init_pars = c(Bmsy, MSY, Emsy, B0, 0.1),
                          fitted_pars = fitted_pars,
                          std_err = sqrt(abs(diag(solve(-fit$hessian)))))

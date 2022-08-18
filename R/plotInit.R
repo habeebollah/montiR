@@ -7,7 +7,6 @@
 #'
 #' @param df dataframe containing three columns; year, catch and effort
 #'
-#' @return
 #' @export
 #'
 #' @references

@@ -4,7 +4,7 @@
 \alias{Sproj}
 \title{Schaefer's projection function}
 \usage{
-Sproj(inpars, df, nyears, TAC = 1, sigma = 1e-06)
+Sproj(inpars, df, nyears, nsims, TAC = 1, graph = TRUE)
 }
 \arguments{
 \item{inpars}{fitted surplus production parameters which consist of K (carrying capacity),
@@ -14,20 +14,20 @@ B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability
 
 \item{nyears}{number of years the projection for the fishery}
 
+\item{nsims}{number of iteration performed}
+
 \item{TAC}{number to drive the management level}
 
-\item{sigma}{standard deviation estimated in the surplus production data fitting process}
+\item{graph}{whether the plot is produced or not}
+
+\item{s.sigma}{standard deviation estimated in the surplus production data fitting process}
 }
 \value{
-sigma in default is set at a very low value (0.000001) to allow for a deterministic projection. In
-interest to create stochastic projection, the sigma value produced during maximum likelihood estimation
-or use another value can be utilized
-
 The TAC is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower
 to be more conservative or set higher to increase more catch.
-For instance, when the TAC is set conservative at 0.8 of reference point, it will return (1-0.8)Bmsy,
+For instance, when the TAC is set conservative at 0.8 of reference point, it will return
 0.8MSY, and 0.8Emsy. In contrary, the TAC will increase catch when it is set at 1.2
-(or other value higher than 1) and return (1*1.2)Bmsy, 1.2MSY, and 1.2Emsy.
+(or other value higher than 1) and return 1.2MSY, and 1.2Emsy.
 }
 \description{
 Function to create projection in Schaefer's model based on different reference points (MSY, Emsy) and
@@ -35,18 +35,25 @@ different Total Allowable Catch setting (TAC). This projection can be used to as
 limit and target reference point.
 }
 \examples{
-res <- Sproj(inpars=fitted_pars[1:4], df=df.goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+K <- 1000
+B0 <- K
+r <- 0.2
+q <- 0.00025
+s.sigma <- 0.1
 
-# create simple comparison B/Bmsy and F/Fmsy plotting
-plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year")
-lines(res[[2]][,5], type="l", col="black")
-lines(res[[3]][,5], type="l", col="blue")
-legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+### Estimate parameters using optim
+inpars <- c(log(K), log(B0), log(r), log(q), log(s.sigma))
 
-plot(res[[1]][,6], type="l", col="red", ylab="F/Fmsy", xlab="year")
-lines(res[[2]][,6], type="l", col="black")
-lines(res[[3]][,6], type="l", col="blue")
-legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+fit <- optim(par=inpars,
+             fn=Par.min,
+             df=df.goodcontrast,
+             method="Nelder-Mead",
+             OWT=FALSE, currentF = 0.7, weight = 0.5)
+
+fitted_pars <- exp(fit$par)
+
+library('ggplot2')
+Sproj(inpars=fitted_pars, df=df.goodcontrast, nyears=30, nsims=100, TAC=1, graph=TRUE)
 
 
 }
