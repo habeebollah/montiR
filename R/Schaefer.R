@@ -11,7 +11,6 @@
 #' (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
 #' @param df dataframe containing three columns; year, catch and effort
 #'
-#' @return
 #' @export
 #'
 #' @references
@@ -311,27 +310,34 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #' @export
 #'
 #' @examples
-#' res <- Sproj(inpars=fitted_pars[1:4], df=df.goodcontrast, nyears=30, TAC=1, sigma=0.000001)
+#' K <- 1000
+#' B0 <- K
+#' r <- 0.2
+#' q <- 0.00025
+#' sigma <- 0.1
 #'
-#' # create simple comparison B/Bmsy and F/Fmsy plotting
-#' plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year")
-#' lines(res[[2]][,5], type="l", col="black")
-#' lines(res[[3]][,5], type="l", col="blue")
-#' legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+#' ### Estimate parameters using optim
+#' inpars <- c(log(K), log(B0), log(r), log(q), log(sigma))
 #'
-#' plot(res[[1]][,6], type="l", col="red", ylab="F/Fmsy", xlab="year")
-#' lines(res[[2]][,6], type="l", col="black")
-#' lines(res[[3]][,6], type="l", col="blue")
-#' legend("bottomleft", col=c("red", "black", "blue"), legend=c("MSY", "Emsy", "Bmsy"), lty=1)
+#' fit <- optim(par=inpars,
+#'              fn=Par.min,
+#'              df=df.goodcontrast,
+#'              method="Nelder-Mead",
+#'              OWT=FALSE, currentF = 0.7, weight = 0.5)
+#'
+#' fitted_pars <- exp(fit$par)
+#'
+#' Sproj(inpars=fitted_pars, df=df.goodcontrast, nyears=30, TAC=1)
 #'
 #'
 
 
-Sproj <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
+Sproj <- function(inpars, df, nyears, TAC=1, graph=T){
   K <- inpars[1]
   B0 <- inpars[2]
   r <- inpars[3]
   q <- inpars[4]
+  sigma <- inpars[5]
 
   Emsy <- r/(2*q) #effort at MSY
   Bmsy <- K/2 #biomass at MSY
@@ -370,7 +376,7 @@ Sproj <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
   B_B.msy <- head(EBt.msy,-1)/Bmsy
   F_F.msy <- F.msy/Fmsy
 
-  temp.MSY <- data.frame(Year=Year, Catch=C.msy, Effort=E.msy, EstBt=head(EBt.msy,-1), B_B.08msy=B_B.msy, F_F.msy=F_F.msy)
+  temp.MSY <- data.frame(Year=Year, Catch=C.msy, Effort=E.msy, EstBt=head(EBt.msy,-1), B_Bmsy=B_B.msy, F_Fmsy=F_F.msy)
 
   # projection based on Emsy measure
   for (i in (nrow(df)+1):((nrow(df))+nyears)){
@@ -383,22 +389,18 @@ Sproj <- function(inpars, df, nyears, TAC=1, sigma=0.000001){
   B_B.Emsy <- head(EBt.Emsy,-1)/Bmsy
   F_F.Emsy <- F.Emsy/Fmsy
 
-  temp.Emsy <- data.frame(Year=Year, Catch=C.Emsy, Effort=E.Emsy, EstBt=head(EBt.Emsy,-1), B_B.Emsy=B_B.Emsy, F_F.Emsy=F_F.Emsy)
-
-  # projection based on Bmsy measure
-#  for (i in (nrow(df)+1):((nrow(df))+nyears)){
-#    C.Bmsy[i] <- ifelse(TAC < 1, (1-TAC), TAC)*Bmsy
-#    EBt.Bmsy[i+1] <- (EBt.msy[i]+EBt.Bmsy[i]*r*(1-(EBt.Bmsy[i]/K))-C.Bmsy[i])*rlnorm(n=1, meanlog=(-sigma^2/2), sdlog=sigma)  # stochastic
-#    E.Bmsy[i] <- C.Bmsy[i]/(q*EBt.Bmsy[i])
-#    F.Bmsy[i] <- C.Bmsy[i]/((EBt.Bmsy[i]+EBt.Bmsy[i+1])/2)
-#  }
-
-#  B_B.Bmsy <- head(EBt.Bmsy,-1)/Bmsy
-#  F_F.Bmsy <- F.Bmsy/Fmsy
-
-#  temp.Bmsy <- data.frame(Year=Year, Catch=C.Bmsy, Effort=E.Bmsy, EstBt=head(EBt.Bmsy,-1), B_B.Bmsy=B_B.Bmsy, F_F.Bmsy=F_F.Bmsy)
-
-  #res <- list(temp.MSY, temp.Emsy, temp.Bmsy)
+  temp.Emsy <- data.frame(Year=Year, Catch=C.Emsy, Effort=E.Emsy, EstBt=head(EBt.Emsy,-1), B_BEmsy=B_B.Emsy, F_FEmsy=F_F.Emsy)
   res <- list(temp.MSY, temp.Emsy)
+  if(graph == T){
+       par(mfrow=c(2,1), mar=c(0,0,0,0), oma=c(5,5,1,1))
+       plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year", ylim=c(0,2.4), xaxt="n")
+       lines(res[[2]][,5], type="l", col="black")
+       mtext(text="B/Bmsy", side=2, line=3)
+       legend("topright", col=c("red", "black"), legend=c("MSY", "Emsy"), lty=1, bty="n")
+
+       plot(res[[1]][,6], type="l", col="red", ylab="F/Fmsy", xlab="year", ylim=c(0,2.4))
+       lines(res[[2]][,6], type="l", col="black")
+       mtext(text="F/Fmsy", side=2, line=3)
+}
   return(res)
 }
