@@ -66,7 +66,7 @@ Par_init <- function(inpars, df){
 #'
 #' @param inpars surplus production parameters which consist of K (carrying capacity), B0
 #' (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient),
-#' sigma (observation error)
+#' s.sigma (observation error)
 #' @param df dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
 #' if OWT (One Way Trip) option uses "Biomass"
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
@@ -102,10 +102,10 @@ Par_init <- function(inpars, df){
 #' B0 <- K
 #' r <- 0.2
 #' q <- 0.00025
-#' sigma <- 0.1
+#' s.sigma <- 0.1
 #'
 #' ### Estimate parameters using optim
-#' inpars <- c(log(K), log(B0), log(r), log(q), log(sigma))
+#' inpars <- c(log(K), log(B0), log(r), log(q), log(s.sigma))
 #'
 #' fit <- optim(par=inpars,
 #'              fn=Par.min,
@@ -113,8 +113,8 @@ Par_init <- function(inpars, df){
 #'              method="Nelder-Mead",
 #'              OWT=FALSE, currentF = 0.7, weight = 0.5)
 #'
-#' Par.vals <- data.frame(SPpar = c("K", "B0", "r", "q", "sigma"),
-#'                          init_pars = c(K, B0, r, q, sigma),
+#' Par.vals <- data.frame(SPpar = c("K", "B0", "r", "q", "s.sigma"),
+#'                          init_pars = c(K, B0, r, q, s.sigma),
 #'                          fitted_pars = exp(fit$par))
 #'
 Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
@@ -122,7 +122,7 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
   B0 <- exp(inpars[2])
   r <- exp(inpars[3])
   q <- exp(inpars[4])
-  sigma <- exp(inpars[5])
+  s.sigma <- exp(inpars[5])
 
   CPUE <- df$catch/df$effort
   EstCatch <- EstCPUE <- EstBt <- vector(length=nrow(df))
@@ -137,19 +137,19 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
   EstCPUE <-  EstBt * q
 
   if (OWT==FALSE){
-    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE))
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = s.sigma, log = TRUE))
     }
 
   if (OWT=="Depletion"){
     annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
-    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = s.sigma, log = TRUE)) +
       weight * (tail(annualFrates,1) - currentF)^2
     #print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
   }
 
   if (OWT=="Biomass"){
     surveyB <- df[,4]
-    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = s.sigma, log = TRUE)) +
       -sum(weight * (surveyB - EstBt)^2)
   }
 
@@ -173,7 +173,7 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
 #'
 #' @param inpars reference point parameters which consist of Bmsy (stock biomass at maximum
 #' sustainable yield), MSY (maximum sustainable yield), Emsy (effort at maximum sustainable yield), B0 (biomass when fishing is started)
-#' and sigma (observation error)
+#' and s.sigma (observation error)
 #' @param df dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
 #' if OWT (One Way Trip) option uses "Biomass"
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
@@ -213,14 +213,14 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
 #' B0 <- K
 #' r <- 0.2
 #' q <- 0.00025
-#' sigma <- 0.1
+#' s.sigma <- 0.1
 #'
 #' Bmsy <- K/2
 #' MSY <- (r*K)/4
 #' Emsy <- r/(2*q)
 #'
 #' ### Estimate parameters using optim
-#' inpars <- c(Bmsy, MSY, Emsy, B0, sigma)
+#' inpars <- c(Bmsy, MSY, Emsy, B0, s.sigma)
 #'
 #' fit <- optim(par=inpars,
 #'              fn=ParRP_min,
@@ -232,7 +232,7 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
 #' fitted_pars <- fit$par
 #'
 #' ### compile the result and calculate the standard error
-#' ParRP_vals <- data.frame(RPpar = c("Bmsy", "MSY", "Emsy", "B0", "sigma"),
+#' ParRP_vals <- data.frame(RPpar = c("Bmsy", "MSY", "Emsy", "B0", "s.sigma"),
 #'                          init_pars = c(Bmsy, MSY, Emsy, B0, 0.1),
 #'                          fitted_pars = fitted_pars,
 #'                          std_err = sqrt(abs(diag(solve(-fit$hessian)))))
@@ -243,7 +243,7 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
   MSY <- inpars[2]
   Emsy <- inpars[3]
   B0 <- inpars[4]
-  sigma <- inpars[5]
+  s.sigma <- inpars[5]
 
   K <- 2*Bmsy
   r <- (MSY*4)/K
@@ -262,19 +262,19 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
   EstCPUE <-  EstBt * q
 
   if (OWT==FALSE){
-    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE))
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = s.sigma, log = TRUE))
   }
 
   if (OWT=="Depletion"){
     annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
-    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = s.sigma, log = TRUE)) +
       weight * (tail(annualFrates,1) - currentF)^2
     #print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
   }
 
   if (OWT=="Biomass"){ # haven't been checked yet
     surveyB <- df[,4]
-    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = s.sigma, log = TRUE)) +
       -sum(weight * (surveyB - EstBt)^2)
   }
 
@@ -293,14 +293,12 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #' B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient)
 #' @param df dataframe containing three columns; year, catch and effort
 #' @param nyears number of years the projection for the fishery
+#' @param nsims number of iteration performed
 #' @param TAC number to drive the management level
-#' @param sigma standard deviation estimated in the surplus production data fitting process
+#' @param s.sigma standard deviation estimated in the surplus production data fitting process
+#' @param graph whether the plot is produced or not
 #'
 #' @return
-#' sigma in default is set at a very low value (0.000001) to allow for a deterministic projection. In
-#' interest to create stochastic projection, the sigma value produced during maximum likelihood estimation
-#' or use another value can be utilized
-#'
 #' The TAC is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower
 #' to be more conservative or set higher to increase more catch.
 #' For instance, when the TAC is set conservative at 0.8 of reference point, it will return
@@ -314,10 +312,10 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #' B0 <- K
 #' r <- 0.2
 #' q <- 0.00025
-#' sigma <- 0.1
+#' s.sigma <- 0.1
 #'
 #' ### Estimate parameters using optim
-#' inpars <- c(log(K), log(B0), log(r), log(q), log(sigma))
+#' inpars <- c(log(K), log(B0), log(r), log(q), log(s.sigma))
 #'
 #' fit <- optim(par=inpars,
 #'              fn=Par.min,
@@ -327,80 +325,175 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #'
 #' fitted_pars <- exp(fit$par)
 #'
-#' Sproj(inpars=fitted_pars, df=df.goodcontrast, nyears=30, TAC=1)
+#' library('ggplot2')
+#' Sproj(inpars=fitted_pars, df=df.goodcontrast, nyears=30, nsims=100, TAC=1, graph=TRUE)
 #'
 #'
 
 
-Sproj <- function(inpars, df, nyears, TAC=1, graph=T){
+Sproj <- function(inpars, df,
+                  nyears, nsims,
+                  TAC = 1, graph = TRUE) {
+
   K <- inpars[1]
   B0 <- inpars[2]
   r <- inpars[3]
   q <- inpars[4]
-  sigma <- inpars[5]
+  s.sigma <- inpars[5]
 
-  Emsy <- r/(2*q) #effort at MSY
-  Bmsy <- K/2 #biomass at MSY
-  MSY <- (r*K)/4 #MSY
-  Fmsy <- r/2 #fishing mortality at MSY
+  Emsy <- r / (2 * q) #effort at MSY
+  Bmsy <- K / 2 #biomass at MSY
+  MSY <- (r * K) / 4 #MSY
+  Fmsy <- r / 2 #fishing mortality at MSY
 
-  EBt.msy <- EBt.Emsy  <- EBt.Bmsy <- vector(length=nrow(df))
+  EBt.msy <- EBt.Emsy  <- EBt.Bmsy <- vector(length = nrow(df))
 
-  Year <- E.msy <- E.Emsy <- E.Bmsy <- C.msy <- C.Emsy <- C.Bmsy <- F.msy <- F.Emsy <- F.Bmsy <- vector(length=nrow(df)+nyears)
-  Year <- df$year[1]:(df$year[1]+nrow(df)+nyears-1)
+  Year <- E.msy <- E.Emsy <- E.Bmsy <- C.msy <- C.Emsy <- C.Bmsy <- F.msy <- F.Emsy <- F.Bmsy <- vector(length = nrow(df) + nyears)
+  Year <- df$year[1]:(df$year[1] + nrow(df) + nyears - 1)
 
   # observation df
   EBt.msy[1] <- EBt.Emsy[1] <- EBt.Bmsy[1] <- B0
-  for (i in 1:(nrow(df))){
-    EBt.msy[i+1] <- EBt.msy[i]+EBt.msy[i]*r*(1-(EBt.msy[i]/K))-df[i,2]
-    EBt.Emsy[i+1] <- EBt.Emsy[i]+EBt.Emsy[i]*r*(1-(EBt.Emsy[i]/K))-df[i,2]
-    EBt.Bmsy[i+1] <- EBt.Bmsy[i]+EBt.Bmsy[i]*r*(1-(EBt.Bmsy[i]/K))-df[i,2]
+  for (i in 1:(nrow(df))) {
+    EBt.msy[i + 1] <- EBt.msy[i] + EBt.msy[i] * r * (1 - (EBt.msy[i] / K)) - df[i, 2]
+    EBt.Emsy[i + 1] <- EBt.Emsy[i] + EBt.Emsy[i] * r * (1 - (EBt.Emsy[i] / K)) - df[i, 2]
+    EBt.Bmsy[i + 1] <- EBt.Bmsy[i] + EBt.Bmsy[i] * r * (1 - (EBt.Bmsy[i] / K)) - df[i, 2]
   }
 
   E.msy[1:(nrow(df))] <- E.Emsy[1:(nrow(df))] <- E.Bmsy[1:(nrow(df))] <- df$effort
   C.msy[1:(nrow(df))] <- C.Emsy[1:(nrow(df))] <- C.Bmsy[1:(nrow(df))] <- df$catch
 
-  for (i in 1:nrow(df)){
-    F.msy[i] <- df$catch[i]/((EBt.msy[i]+EBt.msy[i+1])/2)
-    F.Emsy[i] <- df$catch[i]/((EBt.Emsy[i]+EBt.Emsy[i+1])/2)
+  for (i in 1:nrow(df)) {
+    F.msy[i] <- df$catch[i] / ((EBt.msy[i] + EBt.msy[i + 1]) / 2)
+    F.Emsy[i] <- df$catch[i] / ((EBt.Emsy[i] + EBt.Emsy[i + 1]) / 2)
   }
 
   # projection based on MSY measure
-  for (i in (nrow(df)+1):((nrow(df))+nyears)){
-    C.msy[i] <- TAC*MSY
-    E.msy[i] <- C.msy[i]/(q*EBt.msy[i])
-    EBt.msy[i+1] <- (EBt.msy[i]+EBt.msy[i]*r*(1-(EBt.msy[i]/K))-C.msy[i])*rlnorm(n=1, meanlog=(-sigma^2/2), sdlog=sigma)  # stochastic
-    F.msy[i] <- C.msy[i]/((EBt.msy[i]+EBt.msy[i+1])/2)
+  matr.MSY <- replicate(n = nsims,
+                        expr = {
+                          for (i in (nrow(df) + 1):((nrow(df)) + nyears)) {
+                            C.msy[i] <- TAC * MSY
+                            E.msy[i] <- C.msy[i] / (q * EBt.msy[i])
+                            EBt.msy[i + 1] <- (EBt.msy[i] + EBt.msy[i] * r * (1 - (EBt.msy[i] / K)) - C.msy[i]) * rlnorm(n = 1, meanlog = (-s.sigma ^ 2 / 2), sdlog = s.sigma)  # stochastic
+                            F.msy[i] <- C.msy[i] / ((EBt.msy[i] + EBt.msy[i + 1]) / 2)
+                          }
+
+                          B_B.msy <- head(EBt.msy, -1) / Bmsy
+                          F_F.msy <- F.msy / Fmsy
+
+                          data.frame(Year = Year, Catch = C.msy, Effort = E.msy, EstBt = head(EBt.msy, -1), B_Bmsy = B_B.msy, F_Fmsy = F_F.msy)
+                        },
+                        simplify = F)
+
+  temp.MSY <- matrix(NA, nrow=length(Year), ncol=16)
+  temp.MSY[,1] <- Year
+
+  ci.fun <- function(x){
+    nSample <- length(x)
+    meanSample <- mean(x) # mean from each row
+    sdSample <- sd(x) # sd from each row
+
+    marginError <- qt(0.975, df=nSample-1) * sdSample / sqrt(nSample)
+    lci <- meanSample - marginError
+    uci <- meanSample + marginError
+    return(c(lci, uci))
   }
 
-  B_B.msy <- head(EBt.msy,-1)/Bmsy
-  F_F.msy <- F.msy/Fmsy
-
-  temp.MSY <- data.frame(Year=Year, Catch=C.msy, Effort=E.msy, EstBt=head(EBt.msy,-1), B_Bmsy=B_B.msy, F_Fmsy=F_F.msy)
+  for (rows in 1:length(Year)){
+    temp.MSY[rows, 2] <- mean(sapply(matr.MSY, '[[', 2)[rows,]) #mu
+    temp.MSY[rows, 3] <- mean(sapply(matr.MSY, '[[', 3)[rows,])
+    temp.MSY[rows, 4] <- mean(sapply(matr.MSY, '[[', 4)[rows,])
+    temp.MSY[rows, 5] <- mean(sapply(matr.MSY, '[[', 5)[rows,])
+    temp.MSY[rows, 6] <- mean(sapply(matr.MSY, '[[', 6)[rows,])
+    temp.MSY[rows, 7] <- ci.fun(sapply(matr.MSY, '[[', 2)[rows,])[1] #lci
+    temp.MSY[rows, 8] <- ci.fun(sapply(matr.MSY, '[[', 3)[rows,])[1]
+    temp.MSY[rows, 9] <- ci.fun(sapply(matr.MSY, '[[', 4)[rows,])[1]
+    temp.MSY[rows, 10] <- ci.fun(sapply(matr.MSY, '[[', 5)[rows,])[1]
+    temp.MSY[rows, 11] <- ci.fun(sapply(matr.MSY, '[[', 6)[rows,])[1]
+    temp.MSY[rows, 12] <- ci.fun(sapply(matr.MSY, '[[', 2)[rows,])[2] #uci
+    temp.MSY[rows, 13] <- ci.fun(sapply(matr.MSY, '[[', 3)[rows,])[2]
+    temp.MSY[rows, 14] <- ci.fun(sapply(matr.MSY, '[[', 4)[rows,])[2]
+    temp.MSY[rows, 15] <- ci.fun(sapply(matr.MSY, '[[', 5)[rows,])[2]
+    temp.MSY[rows, 16] <- ci.fun(sapply(matr.MSY, '[[', 6)[rows,])[2]
+  }
+  colnames(temp.MSY) <- c("Year", "Catch.mu", "Effort.mu", "EstBt.mu", "B_Bmsy.mu", "F_Fmsy.mu",
+                          "Catch.lci", "Effort.lci", "EstBt.lci", "B_Bmsy.lci", "F_Fmsy.lci",
+                          "Catch.uci", "Effort.uci", "EstBt.uci", "B_Bmsy.uci", "F_Fmsy.uci")
 
   # projection based on Emsy measure
-  for (i in (nrow(df)+1):((nrow(df))+nyears)){
-    E.Emsy[i] <- TAC*Emsy
-    C.Emsy[i] <- q*E.Emsy[i]*EBt.Emsy[i] * rlnorm(n=1, meanlog=(-sigma^2/2), sdlog=sigma)
-    EBt.Emsy[i+1] <- (EBt.Emsy[i]+EBt.Emsy[i]*r*(1-(EBt.Emsy[i]/K))-C.Emsy[i])*rlnorm(n=1, meanlog=(-sigma^2/2), sdlog=sigma)  # stochastic
-    F.Emsy[i] <- C.Emsy[i]/((EBt.Emsy[i]+EBt.Emsy[i+1])/2)
+  matr.EMSY <- replicate(n = nsims,
+                         expr = {
+                           for (i in (nrow(df) + 1):((nrow(df)) + nyears)) {
+                             E.Emsy[i] <- TAC * Emsy
+                             C.Emsy[i] <- q * E.Emsy[i] * EBt.Emsy[i] * rlnorm(n = 1, meanlog = (-s.sigma ^ 2 / 2), sdlog = s.sigma)
+                             EBt.Emsy[i + 1] <- (EBt.Emsy[i] + EBt.Emsy[i] * r * (1 - (EBt.Emsy[i] / K)) - C.Emsy[i]) * rlnorm(n = 1, meanlog = (-s.sigma ^ 2 / 2), sdlog = s.sigma)  # stochastic
+                             F.Emsy[i] <- C.Emsy[i] / ((EBt.Emsy[i] + EBt.Emsy[i + 1]) / 2)
+                           }
+
+                           B_B.Emsy <- head(EBt.Emsy, -1) / Bmsy
+                           F_F.Emsy <- F.Emsy / Fmsy
+
+                           data.frame(Year = Year, Catch = C.Emsy, Effort = E.Emsy, EstBt = head(EBt.Emsy, -1), B_BEmsy = B_B.Emsy, F_FEmsy = F_F.Emsy)
+                         },
+                         simplify = F)
+
+  temp.EMSY <- matrix(NA, nrow=length(Year), ncol=16)
+  temp.EMSY[,1] <- Year
+
+  for (rows in 1:length(Year)){
+    temp.EMSY[rows, 2] <- mean(sapply(matr.EMSY, '[[', 2)[rows,]) #mu
+    temp.EMSY[rows, 3] <- mean(sapply(matr.EMSY, '[[', 3)[rows,])
+    temp.EMSY[rows, 4] <- mean(sapply(matr.EMSY, '[[', 4)[rows,])
+    temp.EMSY[rows, 5] <- mean(sapply(matr.EMSY, '[[', 5)[rows,])
+    temp.EMSY[rows, 6] <- mean(sapply(matr.EMSY, '[[', 6)[rows,])
+    temp.EMSY[rows, 7] <- ci.fun(sapply(matr.EMSY, '[[', 2)[rows,])[1] #lci
+    temp.EMSY[rows, 8] <- ci.fun(sapply(matr.EMSY, '[[', 3)[rows,])[1]
+    temp.EMSY[rows, 9] <- ci.fun(sapply(matr.EMSY, '[[', 4)[rows,])[1]
+    temp.EMSY[rows, 10] <- ci.fun(sapply(matr.EMSY, '[[', 5)[rows,])[1]
+    temp.EMSY[rows, 11] <- ci.fun(sapply(matr.EMSY, '[[', 6)[rows,])[1]
+    temp.EMSY[rows, 12] <- ci.fun(sapply(matr.EMSY, '[[', 2)[rows,])[2] #uci
+    temp.EMSY[rows, 13] <- ci.fun(sapply(matr.EMSY, '[[', 3)[rows,])[2]
+    temp.EMSY[rows, 14] <- ci.fun(sapply(matr.EMSY, '[[', 4)[rows,])[2]
+    temp.EMSY[rows, 15] <- ci.fun(sapply(matr.EMSY, '[[', 5)[rows,])[2]
+    temp.EMSY[rows, 16] <- ci.fun(sapply(matr.EMSY, '[[', 6)[rows,])[2]
   }
+  colnames(temp.EMSY) <- c("Year", "Catch.mu", "Effort.mu", "EstBt.mu", "B_BEmsy.mu", "F_FEmsy.mu",
+                           "Catch.lci", "Effort.lci", "EstBt.lci", "B_BEmsy.lci", "F_FEmsy.lci",
+                           "Catch.uci", "Effort.uci", "EstBt.uci", "B_BEmsy.uci", "F_FEmsy.uci")
 
-  B_B.Emsy <- head(EBt.Emsy,-1)/Bmsy
-  F_F.Emsy <- F.Emsy/Fmsy
+  if (graph == TRUE){
+    plot.MSY_B <- data.frame(temp.MSY[,c(1, 5, 10, 15)])
+    ggplot2::ggplot(plot.MSY_B, aes(x=Year, y=B_Bmsy.mu)) + geom_line() +
+      geom_ribbon(data=plot.MSY_B, aes(ymin=B_Bmsy.lci, ymax=B_Bmsy.uci), alpha=0.3, fill="blue") +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), panel.background = element_blank(),
+            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
+      labs(x="Year", y="B/Bmsy") + ggtitle(paste("B/Bmsy managed under", TAC, "* MSY"))
 
-  temp.Emsy <- data.frame(Year=Year, Catch=C.Emsy, Effort=E.Emsy, EstBt=head(EBt.Emsy,-1), B_BEmsy=B_B.Emsy, F_FEmsy=F_F.Emsy)
-  res <- list(temp.MSY, temp.Emsy)
-  if(graph == T){
-       par(mfrow=c(2,1), mar=c(0,0,0,0), oma=c(5,5,1,1))
-       plot(res[[1]][,5], type="l", col="red", ylab="B/Bmsy", xlab="year", ylim=c(0,2.4), xaxt="n")
-       lines(res[[2]][,5], type="l", col="black")
-       mtext(text="B/Bmsy", side=2, line=3)
-       legend("topright", col=c("red", "black"), legend=c("MSY", "Emsy"), lty=1, bty="n")
+    plot.MSY_F <- data.frame(temp.MSY[,c(1, 6, 11, 16)])
+    ggplot2::ggplot(plot.MSY_F, aes(x=Year, y=F_Fmsy.mu)) + geom_line() +
+      geom_ribbon(data=plot.MSY_F, aes(ymin=F_Fmsy.lci, ymax=F_Fmsy.uci), alpha=0.3, fill="red") +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), panel.background = element_blank(),
+            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
+      labs(x="Year", y="F/Fmsy") + ggtitle(paste("F/Fmsy managed under", TAC, "* MSY"))
 
-       plot(res[[1]][,6], type="l", col="red", ylab="F/Fmsy", xlab="year", ylim=c(0,2.4))
-       lines(res[[2]][,6], type="l", col="black")
-       mtext(text="F/Fmsy", side=2, line=3)
-}
+    plot.EMSY_B <- data.frame(temp.EMSY[,c(1, 5, 10, 15)])
+    ggplot2::ggplot(plot.EMSY_B, aes(x=Year, y=B_BEmsy.mu)) + geom_line() +
+      geom_ribbon(data=plot.EMSY_B, aes(ymin=B_BEmsy.lci, ymax=B_BEmsy.uci), alpha=0.3, fill="blue") +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), panel.background = element_blank(),
+            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
+      labs(x="Year", y="B/Bmsy") + ggtitle(paste("B/Bmsy managed under", TAC, "* Emsy"))
+
+    plot.EMSY_F <- data.frame(temp.EMSY[,c(1, 6, 11, 16)])
+    ggplot2::ggplot(plot.EMSY_F, aes(x=Year, y=F_FEmsy.mu)) + geom_line() +
+      geom_ribbon(data=plot.EMSY_F, aes(ymin=F_FEmsy.lci, ymax=F_FEmsy.uci), alpha=0.3, fill="red") +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), panel.background = element_blank(),
+            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
+      labs(x="Year", y="F/Fmsy") + ggtitle(paste("F/Fmsy managed under", TAC,"* Emsy"))
+  }
+  res <- list(MSY=temp.MSY, Emsy=temp.EMSY)
   return(res)
 }
+
