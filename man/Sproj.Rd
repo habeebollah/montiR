@@ -52,7 +52,6 @@ fit <- optim(par=inpars,
 
 fitted_pars <- exp(fit$par)
 
-library('ggplot2')
 Sproj(inpars=fitted_pars, df=df.goodcontrast, nyears=30, nsims=100, TAC=1, graph=TRUE)
 
 

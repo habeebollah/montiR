@@ -325,7 +325,6 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #'
 #' fitted_pars <- exp(fit$par)
 #'
-#' library('ggplot2')
 #' Sproj(inpars=fitted_pars, df=df.goodcontrast, nyears=30, nsims=100, TAC=1, graph=TRUE)
 #'
 #'
@@ -460,40 +459,42 @@ Sproj <- function(inpars, df,
                            "Catch.lci", "Effort.lci", "EstBt.lci", "B_BEmsy.lci", "F_FEmsy.lci",
                            "Catch.uci", "Effort.uci", "EstBt.uci", "B_BEmsy.uci", "F_FEmsy.uci")
 
-  if (graph == TRUE){
-    plot.MSY_B <- data.frame(temp.MSY[,c(1, 5, 10, 15)])
-    ggplot2::ggplot(plot.MSY_B, aes(x=Year, y=B_Bmsy.mu)) + geom_line() +
-      geom_ribbon(data=plot.MSY_B, aes(ymin=B_Bmsy.lci, ymax=B_Bmsy.uci), alpha=0.3, fill="blue") +
-      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(), panel.background = element_blank(),
-            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
-      labs(x="Year", y="B/Bmsy") + ggtitle(paste("B/Bmsy managed under", TAC, "* MSY"))
-
-    plot.MSY_F <- data.frame(temp.MSY[,c(1, 6, 11, 16)])
-    ggplot2::ggplot(plot.MSY_F, aes(x=Year, y=F_Fmsy.mu)) + geom_line() +
-      geom_ribbon(data=plot.MSY_F, aes(ymin=F_Fmsy.lci, ymax=F_Fmsy.uci), alpha=0.3, fill="red") +
-      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(), panel.background = element_blank(),
-            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
-      labs(x="Year", y="F/Fmsy") + ggtitle(paste("F/Fmsy managed under", TAC, "* MSY"))
-
-    plot.EMSY_B <- data.frame(temp.EMSY[,c(1, 5, 10, 15)])
-    ggplot2::ggplot(plot.EMSY_B, aes(x=Year, y=B_BEmsy.mu)) + geom_line() +
-      geom_ribbon(data=plot.EMSY_B, aes(ymin=B_BEmsy.lci, ymax=B_BEmsy.uci), alpha=0.3, fill="blue") +
-      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(), panel.background = element_blank(),
-            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
-      labs(x="Year", y="B/Bmsy") + ggtitle(paste("B/Bmsy managed under", TAC, "* Emsy"))
-
-    plot.EMSY_F <- data.frame(temp.EMSY[,c(1, 6, 11, 16)])
-    ggplot2::ggplot(plot.EMSY_F, aes(x=Year, y=F_FEmsy.mu)) + geom_line() +
-      geom_ribbon(data=plot.EMSY_F, aes(ymin=F_FEmsy.lci, ymax=F_FEmsy.uci), alpha=0.3, fill="red") +
-      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(), panel.background = element_blank(),
-            axis.line = element_line(colour = "black"), axis.title.y = element_blank()) +
-      labs(x="Year", y="F/Fmsy") + ggtitle(paste("F/Fmsy managed under", TAC,"* Emsy"))
-  }
   res <- list(MSY=temp.MSY, Emsy=temp.EMSY)
+
+  if (graph == TRUE){
+    par(mfrow=c(2,2), mar=c(0,0,0,0), oma=c(5,5,1,1))
+
+    #MSY
+    plot(x=res[[1]][,1], y=res[[1]][,5], type="l", col="blue", ylim=c(0,2.4), xaxt="n")
+    lines(x=res[[1]][,1], y=res[[1]][,10], type="l", lty=2, col="red")
+    lines(x=res[[1]][,1], y=res[[1]][,15], type="l", lty=2, col="red")
+    lines(x=res[[1]][1:nrow(df),1], y=res[[1]][1:nrow(df),10], type="l", col="black")
+    mtext(text="B/Bmsy", side=2, line=3)
+    mtext(text=paste("Trajectory based on", TAC, "* MSY"), side=3, line=-1.5)
+
+    #EMSY
+    plot(x=res[[2]][,1], y=res[[2]][,5], type="l", col="blue", ylim=c(0,2.4), xaxt="n", yaxt="n")
+    lines(x=res[[2]][,1], y=res[[2]][,10], type="l", lty=2, col="red")
+    lines(x=res[[2]][,1], y=res[[2]][,15], type="l", lty=2, col="red")
+    lines(x=res[[2]][1:nrow(df),1], y=res[[2]][1:nrow(df),10], type="l", col="black")
+    mtext(text=paste("Trajectory based on", TAC, "* Emsy"), side=3, line=-1.5)
+    legend("bottomright", legend=c("Mean projection", "95% CI", "Observation"), col=c("blue", "red", "black"), lty=c(1,2,1), bty="n")
+
+    #MSY
+    plot(x=res[[1]][,1], y=res[[1]][,6], type="l", col="blue", ylim=c(0,2.4))
+    lines(x=res[[1]][,1], y=res[[1]][,11], type="l", lty=2, col="red")
+    lines(x=res[[1]][,1], y=res[[1]][,16], type="l", lty=2, col="red")
+    lines(x=res[[1]][1:nrow(df),1], y=res[[1]][1:nrow(df),11], type="l", col="black")
+    mtext(text="F/Fmsy", side=2, line=3)
+
+    #EMSY
+    plot(x=res[[2]][,1], y=res[[2]][,6], type="l", col="blue", ylim=c(0,2.4), yaxt="n")
+    lines(x=res[[2]][,1], y=res[[2]][,11], type="l", lty=2, col="red")
+    lines(x=res[[2]][,1], y=res[[2]][,16], type="l", lty=2, col="red")
+    lines(x=res[[2]][1:nrow(df),1], y=res[[2]][1:nrow(df),11], type="l", col="black")
+    mtext(text="Years", side=1, line=3, outer=T)
+    legend("bottomright", legend=c("Mean projection", "95% CI", "Observation"), col=c("blue", "red", "black"), lty=c(1,2,1), bty="n")
+  }
   return(res)
 }
 
