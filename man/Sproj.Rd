@@ -19,8 +19,6 @@ B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability
 \item{TAC}{number to drive the management level}
 
 \item{graph}{whether the plot is produced or not}
-
-\item{s.sigma}{standard deviation estimated in the surplus production data fitting process}
 }
 \value{
 The TAC is set at 1 in default. It would depend on the fishery to set whether the TAC can be set lower

@@ -295,7 +295,6 @@ ParRP_min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #' @param nyears number of years the projection for the fishery
 #' @param nsims number of iteration performed
 #' @param TAC number to drive the management level
-#' @param s.sigma standard deviation estimated in the surplus production data fitting process
 #' @param graph whether the plot is produced or not
 #'
 #' @return
