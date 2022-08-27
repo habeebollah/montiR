@@ -19,6 +19,7 @@ for (i in 1:nYears) {
 
 df.onewaytrip <- data.frame(year=1981:2000,
                          catch = C,
-                         effort = effort)
+                         effort = effort,
+                         biomass = B)
 
 usethis::use_data(df.onewaytrip, overwrite = TRUE)

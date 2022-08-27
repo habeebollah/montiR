@@ -10,13 +10,14 @@ A data frame with 20 rows and 3 variables:
   \item{year}{year when fishing activity occured.}
   \item{catch}{catch per annum in MT.}
   \item{effort}{effort unit per annum.}
+  \item{biomass}{fish biomass per annum in MT.}
 }
 }
 \usage{
 df.goodcontrast0
 }
 \description{
-A data set containing year, catch and effort which shows CPUE in good contrast.
+A data set containing year, catch, effort and biomass which shows CPUE in good contrast.
 This data shows doesn't show stochasticity using lognormal process and catch error.
 }
 \references{
