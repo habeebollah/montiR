@@ -13,9 +13,9 @@ Tool ini melakukan estimasi parameter K, B0, r, q dan menentukan jumlah tangkapa
 
 Fungsi ini dipersiapkan untuk melakukan analisis surplus produksi pada data dengan jenis good contrast dan one way trip.
 
-(c) Menghitung standard error dari reference point
+(c) Menghitung standard error dan confident interval dari reference point
 
-Tool ini mengestimasi jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) serta menghitung standard error menggunakan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer.
+Tool ini mengestimasi jumlah stok ikan yang lestari (Bmsy), jumlah tangkapan ikan lestari (MSY) dan upaya penangkapan ikan lestari (Emsy) serta menghitung standard error menggunakan data runut waktu dengan asumsi non-equilibrium untuk model Schaefer. Confident interval juga dihitung khusus untuk jumlah tangkapan lestari (MSY)
 
 (2) Membuat proyeksi atas kebijakan reference point berdasar tingkat pemanfaatan perikanan
 

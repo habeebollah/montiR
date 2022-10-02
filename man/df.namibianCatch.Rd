@@ -9,14 +9,14 @@ A data frame with 23 rows and 3 variables:
 \describe{
   \item{year}{year when fishing activity occured.}
   \item{catch}{catch per annum in MT.}
-  \item{effort}{effort unit per annum.}
+  \item{cpue}{catch per unit of effort per annum.}
 }
 }
 \usage{
 df.namibianCatch
 }
 \description{
-A data set containing year, catch and effort from Cape hake in northern Namibia (Punt and Hilborn, 1996).
+A data set containing year, catch and unit of effort from Cape hake in northern Namibia (Punt and Hilborn, 1996).
 }
 \references{
 AE Punt, and R Hilborn, Biomass dynamic models (BIODYN). User's manual: FAO computerized information series. Fisheries. Rome [FAO COMPUT. INF. SER. (FISH.)], 1996, no. 10, 62 pp.

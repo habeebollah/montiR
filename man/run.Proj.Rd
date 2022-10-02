@@ -11,7 +11,7 @@ run.Proj(inpars, df, nyears, nsims, TAC = 1, plot = TRUE)
 B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient), and
 sigma (observation error)}
 
-\item{df}{dataframe containing three columns; year, catch and effort}
+\item{df}{dataframe containing three columns; year, catch and unit of effort}
 
 \item{nyears}{number of years the projection for the fishery}
 

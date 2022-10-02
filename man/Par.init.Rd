@@ -16,7 +16,7 @@ activity has started}
 
 \item{q}{surplus production parameters which represents catchability coefficient}
 
-\item{df}{dataframe containing three columns; year, catch and effort}
+\item{df}{dataframe containing three columns; year, catch and unit of effort}
 
 \item{res}{option to show estimated data based on estimated surplus production input}
 }

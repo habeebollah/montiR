@@ -1,13 +1,13 @@
 Package: montiR
 Type: Package
-Title: Biomass dynamic models for fisheries using time series methods
-Version: 0.3.0
+Title: Biomass dynamic models for fisheries using time series data fitting methods
+Version: 0.4.0
 Author: Abdullah Habibi
 Maintainer: Abdullah Habibi <habeebollah@yahoo.com>
-Description: montiR (Model biOmass diNamik singkaT dI R) merupakan kumpulan model biomas dinamik dengan pendekatan time series fitting.
+Description: montiR (Model biOmass diNamik singkaT dI R) merupakan kumpulan fungsi analisis model biomas dinamik dengan pendekatan time series data fitting.
 License: GPL-3
 Encoding: UTF-8
-Imports:
+Imports: rfishbase
 LazyData: true
 RoxygenNote: 7.2.1
 Depends: 

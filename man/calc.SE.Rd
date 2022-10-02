@@ -24,7 +24,7 @@ calc.SE(
 
 \item{s.sigma}{surplus production parameter which represents observation error}
 
-\item{df}{dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
+\item{df}{dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
 if OWT (One Way Trip) option uses "Biomass"}
 
 \item{OWT}{is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be

@@ -19,7 +19,7 @@ for (i in 1:nYears) {
 
 df.goodcontrast <- data.frame(year=1981:2000,
                             catch = C,
-                            effort = effort,
+                            cpue = CPUE,
                             biomass = B)
 
 usethis::use_data(df.goodcontrast, overwrite = TRUE)

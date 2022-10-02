@@ -20,11 +20,11 @@
 #' plotInit(df.onewaytrip)
 #'
 plotInit <- function(df){
-  I <- df[,2]/df[,3]
 
-  par(mfrow=c(2,2), mar=c(3,4,1,2))
+  Effort <- df[,2]/df[,3]
+
+  par(mfrow=c(3,1), mar=c(3,4,1,2))
   plot(x=df[,1], y=df[,2], type="l", ylab="Catch")
-  plot(x=df[,1], y=df[,3], type="l", ylab="Effort")
-  plot(x=df[,1], y=I, type="l", ylab="CPUE")
-  hist(I, main=NULL)
+  plot(x=df[,1], y=Effort, type="l", ylab="Effort")
+  plot(x=df[,1], y=df[,3], type="l", ylab="CPUE")
 }

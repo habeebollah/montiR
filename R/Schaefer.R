@@ -12,7 +12,7 @@
 #' activity has started
 #' @param r surplus production parameters which represents intrinsic growth rate
 #' @param q surplus production parameters which represents catchability coefficient
-#' @param df dataframe containing three columns; year, catch and effort
+#' @param df dataframe containing three columns; year, catch and unit of effort
 #' @param res option to show estimated data based on estimated surplus production input
 #'
 #' @export
@@ -27,21 +27,21 @@
 #'
 Par.init <- function(K, B0, r, q, df, res=TRUE){
 
-  CPUE <- df$catch/df$effort
-  EstCatch <- EstCPUE <- EstBt <- vector(length=nrow(df))
+  CPUE <- df$cpue
+  EstEffort <- EstCatch <- EstCPUE <- EstBt <- vector(length=nrow(df))
+  EstEffort <- df$catch / df$cpue
 
   for (i in 1:nrow(df)) {
     if (i == 1) EstBt[i] <- B0
     if (i>1) EstBt[i] <- EstBt[i-1] +  EstBt[i-1] * r * (1 - EstBt[i-1]/K) - df$catch[i-1]
-    EstCatch[i] <- EstBt[i] * q * df$effort[i]
+    EstCatch[i] <- EstBt[i] * q * EstEffort[i]
   }
 
-  EstCPUE <- EstCatch / df$effort
+  EstCPUE <- EstBt * q
 
   plot(CPUE, xlab="Year", ylab="CPUE", type="b", col="blue")
   lines(EstCPUE, type="b", col="red")
   legend("topright", legend=c("Observation", "Estimation"), lty=c(1, 1), col=c("blue", "red"), box.lty=1, cex=0.7, bty="n")
-
 
   if(res==TRUE){
     return(data.frame(CPUE=CPUE, EstBt=EstBt, EstCatch=EstCatch, EstCPUE=EstCPUE))
@@ -57,7 +57,7 @@ Par.init <- function(K, B0, r, q, df, res=TRUE){
 #' @param inpars surplus production parameters which consist of K (carrying capacity), B0
 #' (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient),
 #' s.sigma (observation error)
-#' @param df dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
+#' @param df dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
 #' if OWT (One Way Trip) option uses "Biomass"
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
 #' replaced with either "Biomass" or "Depletion" when the plot shows One Way Trip type of data
@@ -97,15 +97,13 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
   q <- exp(inpars[4])
   s.sigma <- exp(inpars[5])
 
-  CPUE <- df$catch/df$effort
-  EstCatch <- EstCPUE <- EstBt <- vector(length=nrow(df))
+  CPUE <- df$cpue
+  EstCPUE <- EstBt <- vector(length=nrow(df))
 
   for (i in 1:nrow(df)) {
     if (i == 1) EstBt[i] <- B0
     if (i>1) EstBt[i] <- max(c(0.01,
-                               EstBt[i-1] +  EstBt[i-1] * r * (1 - EstBt[i-1]/K) - df$catch[i-1]
-    )
-    )
+                               EstBt[i-1] +  EstBt[i-1] * r * (1 - EstBt[i-1]/K) - df$catch[i-1]))
   }
   EstCPUE <-  EstBt * q
 
@@ -149,7 +147,7 @@ Par.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 1000){
 #' @param r surplus production parameter which represents intrinsic growth rate
 #' @param q surplus production parameter which represents catchability coefficient
 #' @param s.sigma surplus production parameter which represents observation error
-#' @param df dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
+#' @param df dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
 #' if OWT (One Way Trip) option uses "Biomass"
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
 #' replaced with either "Biomass" or "Depletion" when the plot shows One Way Trip type of data
@@ -214,7 +212,7 @@ calc.MSY <- function(K, B0, r, q, s.sigma, df,
   )
   )
   if(plot==TRUE){
-    Par.init(K=vals[1], B0=vals[2], r=vals[3], q=vals[4], df=df, res=FALSE)
+    Par.init(K=vals[1], B0=vals[2], r=vals[3], q=vals[4], df=df, res=TRUE)
   }
   return(res)
 }
@@ -227,7 +225,7 @@ calc.MSY <- function(K, B0, r, q, s.sigma, df,
 #' @param inpars management parameters which consist of Bmsy (stock biomass at maximum
 #' sustainable yield), MSY (maximum sustainable yield), Emsy (effort at maximum sustainable yield), B0 (biomass when fishing is started)
 #' and s.sigma (observation error)
-#' @param df dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
+#' @param df dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
 #' if OWT (One Way Trip) option uses "Biomass"
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
 #' replaced with either "Biomass" or "Depletion" when the plot shows One Way Trip type of data
@@ -273,15 +271,13 @@ ParRP.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
   r <- (MSY*4)/K
   q <- r/(2*Emsy)
 
-  CPUE <- df$catch/df$effort
+  CPUE <- df$cpue
   EstCatch <- EstCPUE <- EstBt <- vector(length=nrow(df))
 
   for (i in 1:nrow(df)) {
     if (i == 1) EstBt[i] <- B0
     if (i>1) EstBt[i] <- max(c(0.01,
-                               EstBt[i-1] +  EstBt[i-1] * r * (1 - EstBt[i-1]/K) - df$catch[i-1]
-    )
-    )
+                               EstBt[i-1] +  EstBt[i-1] * r * (1 - EstBt[i-1]/K) - df$catch[i-1]))
   }
   EstCPUE <-  EstBt * q
 
@@ -323,7 +319,7 @@ ParRP.min <- function(inpars, df, OWT=FALSE, currentF = 0.7, weight = 0.5){
 #' @param Emsy management parameter representing Effort at maximum sustainable yield
 #' @param Bmsy management parameter representing stock Biomass at maximum sustainable yield
 #' @param s.sigma surplus production parameter which represents observation error
-#' @param df dataframe containing three columns; year, catch and effort. A fourth column with biomass should be added
+#' @param df dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
 #' if OWT (One Way Trip) option uses "Biomass"
 #' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
 #' replaced with either "Biomass" or "Depletion" when the plot shows One Way Trip type of data
@@ -386,6 +382,194 @@ calc.SE <- function(MSY, Emsy, Bmsy, s.sigma,
   return(res)
 }
 
+#' @title Function used in the minimizing process to calculate likelihood profile in Schaefer's management parameter
+#'
+#' @description
+#' This function calculates the likelihood profile as input to calculate confidence interval
+#' in Schaefer's management parameters using maximum likelihood minimization.
+#'
+#' @param inpar input parameter which uses r (intrinsic growth)
+#' @param MSYval consist of MSY (maximum sustainable yield) value
+#' @param df dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
+#' if OWT (One Way Trip) option uses "Biomass"
+#' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
+#' replaced with either "Biomass" or "Depletion" when the plot shows One Way Trip type of data
+#' @param currentF Current exploitation rate collected from other survey.
+#' @param weight weight given to the deviation between observed and predicted value in either
+#' biomass or exploitation rate.
+#'
+#' @return
+#' A penalized likelihood is used to fix the lack of contrast in One Way Trip type of data using Depletion or Biomass data.
+#'
+#' The Biomass option in OWT is used when biomass time series data from acoustic or trawl survey is available and
+#' should be added as the fourth columns in the input dataframe. The default weight when Biomass level is set at 0.9 with range
+#' between 0-1 (lower accuracy with high variance as closer to 0, constrain the estimation procedure to fit the auxiliary
+#' information as closer to 1)
+#'
+#' The Depletion option in OWT uses current harvest rate from survey or expert knowledge as penalty.
+#' Depletion range is between 0 to 1, where higher number represent higher depletion level. The default is 0.7 to
+#' say that the depletion is high and many fish were caught. The default weight for harvest rate is 1000 and can be adjusted
+#' so the predicted harvest rate reach a closest value to the current exploitation rate. Predicted harvest rate value
+#' in each optimization step will show up when optimization process is being executed.
+#'
+#' Input are  kept at initial value without using log() like the other minimization inputs. If
+#' the fitted parameters resulting in minus value, use the constrained variables and "L-BFGS-B" optimization method,
+#' and produce the standard error from hessian using steps in https://stackoverflow.com/questions/27202395/how-do-i-get-standard-errors-of-maximum-likelihood-estimates-in-stan
+#'
+#' @export
+#'
+#' @references
+#' Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+#' dynamics and uncertainty. Springer Science & Business Media, 1992.
+#'
+#' Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models:
+#' Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
+#'
+#' Punt, A. E., & Hilborn, R. 1996. Biomass dynamic models. FAO Computerized Information Series Fisheries, 10, 1-62.
+#'
+MSYprofile.min <- function(inpar, df, MSYval, OWT=FALSE, currentF = 0.7, weight = 0.5){
+
+  r <- inpar
+  MSY <- MSYval
+  K <- (MSY*4)/r
+  B0 <- K
+  sigma <- 0.1 # should the sigma be used here?
+
+  CPUE <- df$cpue
+  EstCatch <- EstCPUE <- EstBt <- vector(length=nrow(df))
+
+  for (i in 1:nrow(df)) {
+    if (i == 1) EstBt[i] <- B0
+    if (i>1) EstBt[i] <- max(c(0.01,
+                               EstBt[i-1] +  EstBt[i-1] * r * (1 - EstBt[i-1]/K) - df$catch[i-1]))
+  }
+
+  q <- mean(CPUE) / mean(EstBt)
+  EstCPUE <-  EstBt * q
+
+  if (OWT==FALSE){
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE))
+  }
+
+  if (OWT=="Depletion"){
+    annualFrates <- df[,2]/EstBt # F = catch/biomass = Z-M
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+      weight * (tail(annualFrates,1) - currentF)^2
+    #print(tail(annualFrates,1)) # to check whether the weighting makes the estimates depletion getting closer to the current exploitation rate
+  }
+
+  if (OWT=="Biomass"){
+    surveyB <- df[,4]
+    nll <- -sum(dlnorm(x= na.omit(CPUE), meanlog = log(na.omit(EstCPUE)), sdlog = sigma, log = TRUE)) +
+      -sum(weight * (surveyB - EstBt)^2)
+  }
+
+  return(nll)
+}
+
+#' @title Calculating confident interval for MSY in Schaefer's management parameter
+#'
+#' @description
+#' This function calculates the confident interval for MSY in Schaefer's management parameters
+#' using likelihood profile.
+#' Observation error is used to increase the accuracy of data fitting. It is assumed to occur in the relationship
+#' between stock biomass and index of abundance and is estimated assuming lognormal distribution in
+#' maximum likelihood (Polacheck et al., 1993).
+#'
+#' Since fishing effort data collection are not always conducted regularly while catch is likely
+#' have a better time series information, this function also allow for some lose of catch and effort data.
+#'
+#' This function also consider the different quality data, for instance if the data shows
+#' a one way trip pattern which losing rate of catch increase.
+#'
+#' @param MSYval management parameter representing Maximum Sustainable Yield (MSY)
+#' @param rval parameter which uses r (intrinsic growth)
+#' @param df dataframe containing three columns; year, catch and unit of effort. A fourth column with biomass should be added
+#' if OWT (One Way Trip) option uses "Biomass"
+#' @param OWT is CPUE plot showing One Way Trip pattern? The default is FALSE, but should be
+#' replaced with either "Biomass" or "Depletion" when the plot shows One Way Trip type of data
+#' @param currentF Current exploitation rate collected from other survey.
+#' @param weight weight given to the deviation between observed and predicted value in either
+#' biomass or exploitation rate.
+#' @param plot option to show the plot as result of likelihood profile estimation
+#'
+#' @return
+#' A penalized likelihood is used to fix the lack of contrast in One Way Trip type of data using Depletion or Biomass data.
+#'
+#' The Biomass option in OWT is used when biomass time series data from acoustic or trawl survey is available and
+#' should be added as the fourth columns in the input dataframe. The default weight when Biomass level is set at 0.9 with range
+#' between 0-1 (lower accuracy with high variance as closer to 0, constrain the estimation procedure to fit the auxiliary
+#' information as closer to 1)
+#'
+#' The Depletion option in OWT uses current harvest rate from survey or expert knowledge as penalty.
+#' Depletion range is between 0 to 1, where higher number represent higher depletion level. The default is 0.7 to
+#' say that the depletion is high and many fish were caught. The default weight for harvest rate is 1000 and can be adjusted
+#' so the predicted harvest rate reach a closest value to the current exploitation rate. Predicted harvest rate value
+#' in each optimization step will show up when optimization process is being executed.
+#'
+#' Input are  kept at initial value without using log() like the other minimization inputs. If
+#' the fitted parameters resulting in minus value, use the constrained variables and "L-BFGS-B" optimization method,
+#' and produce the standard error from hessian using steps in https://stackoverflow.com/questions/27202395/how-do-i-get-standard-errors-of-maximum-likelihood-estimates-in-stan
+#'
+#' @export
+#'
+#' @references
+#' Hilborn, Ray, and Carl J. Walters, eds. Quantitative fisheries stock assessment: choice,
+#' dynamics and uncertainty. Springer Science & Business Media, 1992.
+#'
+#' Polacheck, T., Hilborn, R., and A.E. Punt. 1993. Fitting surplus production models:
+#' Comparing methods and measuring uncertainty. Canadian Journal of Fisheries and Aquatic Sciences, 50: 2597-2607.
+#'
+#' Punt, A. E., & Hilborn, R. 1996. Biomass dynamic models. FAO Computerized Information Series Fisheries, 10, 1-62.
+#'
+#' @examples
+#'
+#' calc.CI(MSYval= 50, rval= 0.2, df=df.goodcontrast, plot=TRUE)
+#'
+
+calc.CI <- function(MSYval, rval, df, OWT=FALSE, currentF = 0.7, weight = 0.5, plot=FALSE){
+  MSYvec <- seq(from=MSYval*0.6, to=MSYval*1.4, length.out=1000)
+
+  res <- matrix(NA, nrow=length(MSYvec), ncol=2)
+  res[,1] <- MSYvec
+  colnames(res) <- c("MSYvec", "NLL")
+
+  for(i in 1:length(MSYvec)){
+    x <- optim(par=rval,
+               fn=MSYprofile.min,
+               df=df,
+               MSYval=MSYvec[i],
+               method="Brent",
+               lower=rval*0.5, upper=rval*1.5,
+               OWT=FALSE, currentF = 0.7, weight = 1000)
+    res[i,2] <- x$value # NLL
+  }
+
+
+  # calculate the best MSY and CI
+  bestNLL <- res[[which.min(res[,2]),2]]
+  bestMSY <- res[[which.min(res[,2]),1]]
+  lowdf <- res[1:which.min(res[,2]),]
+  uppdf <- res[which.min(res[,2]):1000,]
+
+  # use an example from https://stackoverflow.com/questions/30314007/find-nearest-smaller-number
+  maxless.low <- max(lowdf[,2][lowdf[,2] <= min(lowdf[,2])+1.92])
+  lowCI <- lowdf[[which(lowdf[,2] == maxless.low), 1]]
+
+  maxless.upp <- max(uppdf[,2][uppdf[,2] <= min(uppdf[,2])+1.92])
+  uppCI <- uppdf[[which(uppdf[,2] == maxless.upp), 1]]
+
+  finres <- data.frame(MSY=bestMSY, lowerCI=lowCI, upperCI=uppCI)
+
+  if(plot==TRUE){
+    plot(x=MSYvec, y=res[,2], type="l", xlab="MSY values", ylab="NLL", col="blue")
+    abline(h=min(res[,2]), lty=2, col="red")
+    abline(h=min(res[,2])+1.92, lty=2, col="gray") # CI95%
+  }
+
+  return(finres)
+}
+
 #' @title Schaefer's projection function
 #'
 #' @description
@@ -396,7 +580,7 @@ calc.SE <- function(MSY, Emsy, Bmsy, s.sigma,
 #' @param inpars fitted surplus production parameters which consist of K (carrying capacity),
 #' B0 (biomass when fishing is started), r (intrinsic growth rate), q (catchability coefficient), and
 #' sigma (observation error)
-#' @param df dataframe containing three columns; year, catch and effort
+#' @param df dataframe containing three columns; year, catch and unit of effort
 #' @param nyears number of years the projection for the fishery
 #' @param nsims number of iteration performed
 #' @param TAC number to drive the management level
@@ -449,7 +633,7 @@ run.Proj <- function(inpars, df,
     EBt.Bmsy[i + 1] <- EBt.Bmsy[i] + EBt.Bmsy[i] * r * (1 - (EBt.Bmsy[i] / K)) - df[i, 2]
   }
 
-  E.msy[1:(nrow(df))] <- E.Emsy[1:(nrow(df))] <- E.Bmsy[1:(nrow(df))] <- df$effort
+  E.msy[1:(nrow(df))] <- E.Emsy[1:(nrow(df))] <- E.Bmsy[1:(nrow(df))] <- df$catch / df$cpue
   C.msy[1:(nrow(df))] <- C.Emsy[1:(nrow(df))] <- C.Bmsy[1:(nrow(df))] <- df$catch
 
   for (i in 1:nrow(df)) {
