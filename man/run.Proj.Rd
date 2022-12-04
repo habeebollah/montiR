@@ -4,7 +4,7 @@
 \alias{run.Proj}
 \title{Schaefer's projection function}
 \usage{
-run.Proj(inpars, df, nyears, nsims, TAC = 1, plot = TRUE)
+run.Proj(inpars, df, nyears, nsims, stoch, TAC = 1, plot = TRUE)
 }
 \arguments{
 \item{inpars}{fitted surplus production parameters which consist of K (carrying capacity),
@@ -16,6 +16,8 @@ sigma (observation error)}
 \item{nyears}{number of years the projection for the fishery}
 
 \item{nsims}{number of iteration performed}
+
+\item{stoch}{stochastic value as a sigma}
 
 \item{TAC}{number to drive the management level}
 
@@ -38,7 +40,7 @@ limit and target reference point.
 fit <- calc.MSY(K=1000, B0=1000, r=0.2, q=0.00025, s.sigma=0.1,
 df=df.goodcontrast, OWT=FALSE, currentF = 0.7, weight=0.5, plot=TRUE)
 
-run.Proj(inpars=fit[[1]][,2], df=df.goodcontrast, nyears=30, nsims=100, TAC=1, plot=TRUE)
+run.Proj(inpars=fit[[1]][,2], df=df.goodcontrast, nyears=30, nsims=100, stoch=0.2, TAC=1, plot=TRUE)
 
 
 }

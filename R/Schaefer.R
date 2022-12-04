@@ -583,6 +583,7 @@ calc.CI <- function(MSYval, rval, df, OWT=FALSE, currentF = 0.7, weight = 0.5, p
 #' @param df dataframe containing three columns; year, catch and unit of effort
 #' @param nyears number of years the projection for the fishery
 #' @param nsims number of iteration performed
+#' @param stoch stochastic value as a sigma
 #' @param TAC number to drive the management level
 #' @param plot whether the projection plot is produced or not
 #'
@@ -600,20 +601,19 @@ calc.CI <- function(MSYval, rval, df, OWT=FALSE, currentF = 0.7, weight = 0.5, p
 #' fit <- calc.MSY(K=1000, B0=1000, r=0.2, q=0.00025, s.sigma=0.1,
 #' df=df.goodcontrast, OWT=FALSE, currentF = 0.7, weight=0.5, plot=TRUE)
 #'
-#' run.Proj(inpars=fit[[1]][,2], df=df.goodcontrast, nyears=30, nsims=100, TAC=1, plot=TRUE)
+#' run.Proj(inpars=fit[[1]][,2], df=df.goodcontrast, nyears=30, nsims=100, stoch=0.2, TAC=1, plot=TRUE)
 #'
 #'
 
 
 run.Proj <- function(inpars, df,
-                  nyears, nsims,
+                  nyears, nsims, stoch,
                   TAC = 1, plot = TRUE) {
 
   K <- inpars[1]
   B0 <- inpars[2]
   r <- inpars[3]
   q <- inpars[4]
-  s.sigma <- inpars[5]
 
   Emsy <- r / (2 * q) #effort at MSY
   Bmsy <- K / 2 #biomass at MSY
@@ -647,7 +647,7 @@ run.Proj <- function(inpars, df,
                           for (i in (nrow(df) + 1):((nrow(df)) + nyears)) {
                             C.msy[i] <- TAC * MSY
                             E.msy[i] <- C.msy[i] / (q * EBt.msy[i])
-                            EBt.msy[i + 1] <- (EBt.msy[i] + EBt.msy[i] * r * (1 - (EBt.msy[i] / K)) - C.msy[i]) * rlnorm(n = 1, meanlog = (-s.sigma ^ 2 / 2), sdlog = s.sigma)  # stochastic
+                            EBt.msy[i + 1] <- (EBt.msy[i] + EBt.msy[i] * r * (1 - (EBt.msy[i] / K)) - C.msy[i]) * rlnorm(n = 1, meanlog = (-stoch ^ 2 / 2), sdlog = stoch)  # stochastic
                             F.msy[i] <- C.msy[i] / ((EBt.msy[i] + EBt.msy[i + 1]) / 2)
                           }
 
@@ -698,8 +698,8 @@ run.Proj <- function(inpars, df,
                          expr = {
                            for (i in (nrow(df) + 1):((nrow(df)) + nyears)) {
                              E.Emsy[i] <- TAC * Emsy
-                             C.Emsy[i] <- q * E.Emsy[i] * EBt.Emsy[i] * rlnorm(n = 1, meanlog = (-s.sigma ^ 2 / 2), sdlog = s.sigma)
-                             EBt.Emsy[i + 1] <- (EBt.Emsy[i] + EBt.Emsy[i] * r * (1 - (EBt.Emsy[i] / K)) - C.Emsy[i]) * rlnorm(n = 1, meanlog = (-s.sigma ^ 2 / 2), sdlog = s.sigma)  # stochastic
+                             C.Emsy[i] <- q * E.Emsy[i] * EBt.Emsy[i]
+                             EBt.Emsy[i + 1] <- (EBt.Emsy[i] + EBt.Emsy[i] * r * (1 - (EBt.Emsy[i] / K)) - C.Emsy[i]) * rlnorm(n = 1, meanlog = (-stoch ^ 2 / 2), sdlog = stoch)  # stochastic
                              F.Emsy[i] <- C.Emsy[i] / ((EBt.Emsy[i] + EBt.Emsy[i + 1]) / 2)
                            }
 
